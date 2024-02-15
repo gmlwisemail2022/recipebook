@@ -2,8 +2,6 @@
 const express = require('express');
 // handlebars package
 const {engine} = require('express-handlebars');
-// body parser package
-const bodyParser = require('body-parser');
 // app
 const app = express();
 // change localhost port here
