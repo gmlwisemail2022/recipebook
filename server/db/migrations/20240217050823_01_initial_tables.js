@@ -25,7 +25,7 @@ exports.up = function (knex) {
           table.string("instructions").notNullable();
           table.timestamp("created_at").defaultTo(knex.fn.now());
           table.timestamp("updated_at").defaultTo(knex.fn.now());
-          table.integer("user_id").references("users.user_id").inTable("users");
+          table.integer("user_id").references("users.user_id");
         });
       })
       .then(() => {
@@ -33,8 +33,8 @@ exports.up = function (knex) {
           table.increments("favorite_id").primary();
           table.timestamp("created_at").defaultTo(knex.fn.now());
           table.timestamp("updated_at").defaultTo(knex.fn.now());
-          table.integer("user_id").references("users.user_id").inTable("users");
-          table.integer("recipe_id").references("recipes.recipe_id").inTable("recipes");
+          table.integer("user_id").references("users.user_id");
+          table.integer("recipe_id").references("recipes.recipe_id");
         });
       })
   );
