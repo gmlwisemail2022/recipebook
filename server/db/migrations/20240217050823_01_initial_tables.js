@@ -6,33 +6,35 @@ exports.up = function (knex) {
   return (
     knex.schema
       .createTable("users", (table) => {
-        table.increments("id").primary();
+        table.increments("user_id").primary();
         table.string("username").notNullable().unique();
         table.string("password").notNullable();
         table.string("email").notNullable().unique();
         table.string("full_name").notNullable();
-        table.boolean("admin").notNullable();
+        table.boolean("admin").notNullable().defaultTo(false);
         table.timestamp("created_at").defaultTo(knex.fn.now());
         table.timestamp("updated_at").defaultTo(knex.fn.now());
       })
       // create promises - one table at a time
       .then(() => {
         return knex.schema.createTable("recipes", (table) => {
-          table.increments("id").primary();
+          table.increments("recipe_id").primary();
           table.string("title").notNullable();
           table.string("ingredients").notNullable();
           table.string("servings").notNullable();
           table.string("instructions").notNullable();
-          table.string("user_id").references("users.id");
           table.timestamp("created_at").defaultTo(knex.fn.now());
           table.timestamp("updated_at").defaultTo(knex.fn.now());
+          table.integer("user_id").references("users.id").inTable("users");
         });
       })
       .then(() => {
         return knex.schema.createTable("favorites", (table) => {
-          table.increments("id").primary();
-          table.string("user_id").references("users.id");
-          table.string("recipe_id").references("recipes.id");
+          table.increments("favorite_id").primary();
+          table.timestamp("created_at").defaultTo(knex.fn.now());
+          table.timestamp("updated_at").defaultTo(knex.fn.now());
+          table.integer("user_id").references("users.user_id").inTable("users");
+          table.integer("recipe_id").references("recipes.recipe_id").inTable("recipes");
         });
       })
   );
