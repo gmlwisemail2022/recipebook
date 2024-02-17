@@ -25,7 +25,7 @@ exports.up = function (knex) {
           table.string("instructions").notNullable();
           table.timestamp("created_at").defaultTo(knex.fn.now());
           table.timestamp("updated_at").defaultTo(knex.fn.now());
-          table.integer("user_id").references("users.id").inTable("users");
+          table.integer("user_id").references("users.user_id").inTable("users");
         });
       })
       .then(() => {
