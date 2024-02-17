@@ -49,7 +49,7 @@ exports.seed = async function (knex) {
     },
   ]);
 
-  await knex("stock").insert([
+  await knex("favorites").insert([
     { user_id: 1, recipe_id: 1 },
     { user_id: 1, recipe_id: 2 },
     { user_id: 2, recipe_id: 2 },
