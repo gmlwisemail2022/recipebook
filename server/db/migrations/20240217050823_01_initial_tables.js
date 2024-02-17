@@ -7,11 +7,13 @@ exports.up = function (knex) {
     knex.schema
       .createTable("users", (table) => {
         table.increments("id").primary();
-        table.string("username").notNullable();
+        table.string("username").notNullable().unique();
         table.string("password").notNullable();
-        table.stringl("email").notNullable();
+        table.string("email").notNullable().unique();
         table.string("full_name").notNullable();
         table.boolean("admin").notNullable();
+        table.timestamp("created_at").defaultTo(knex.fn.now());
+        table.timestamp("updated_at").defaultTo(knex.fn.now());
       })
       // create promises - one table at a time
       .then(() => {
@@ -22,6 +24,8 @@ exports.up = function (knex) {
           table.string("servings").notNullable();
           table.string("instructions").notNullable();
           table.string("user_id").references("users.id");
+          table.timestamp("created_at").defaultTo(knex.fn.now());
+          table.timestamp("updated_at").defaultTo(knex.fn.now());
         });
       })
       .then(() => {
