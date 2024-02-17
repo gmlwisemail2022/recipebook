@@ -41,7 +41,7 @@ exports.up = function (knex) {
 exports.down = function (knex) {
   return knex.schema.dropTable("users").then(() => {
     return knex.schema.dropTable("recipes").then(() => {
-      return knex.schema.dropTable("favories");
+      return knex.schema.dropTable("favorites");
     });
   });
 };
