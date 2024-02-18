@@ -8,8 +8,8 @@ exports.up = function (knex) {
     knex.schema
       .createTable("users", (table) => {
         table.increments("user_id").primary();
-        table.string("username").notNullable().unique();
-        table.string("password").notNullable();
+        table.string("username", 20).notNullable().unique();
+        table.string("password", 20).notNullable();
         table.string("email").notNullable().unique();
         table.string("full_name").notNullable();
         table.boolean("admin").notNullable().defaultTo(false);
@@ -21,9 +21,9 @@ exports.up = function (knex) {
         return knex.schema.createTable("recipes", (table) => {
           table.increments("recipe_id").primary();
           table.string("title").notNullable();
-          table.string("ingredients").notNullable();
+          table.string("ingredients", 2000).notNullable();
           table.string("servings").notNullable();
-          table.string("instructions").notNullable();
+          table.string("instructions", 2000).notNullable();
           table.timestamp("created_at").defaultTo(knex.fn.now());
           table.timestamp("updated_at").defaultTo(knex.fn.now());
           table.integer("user_id").references("users.user_id");
