@@ -1,6 +1,6 @@
 // express package
 const express = require('express');
-
+// routes for CRUD operations
 const router = require('../routes')
 // handlebars package
 const {engine} = require('express-handlebars');
@@ -21,7 +21,7 @@ app.use(express.json());
 app.engine('hbs', engine({extname: '.hbs'}));
 app.set('view engine', 'hbs');
 
-
+// ROUTES - CRUD operations
 app.use(router);
 
 
@@ -31,4 +31,5 @@ app.get('/', (req, res) => {
     res.render('home.hbs')
 });
 
+// module is exported to the server
 module.exports = app;
