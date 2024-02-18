@@ -1,5 +1,7 @@
 // express package
 const express = require('express');
+
+const router = require('../routes')
 // handlebars package
 const {engine} = require('express-handlebars');
 // app
@@ -18,6 +20,9 @@ app.use(express.json());
 // Set up handlebars
 app.engine('hbs', engine({extname: '.hbs'}));
 app.set('view engine', 'hbs');
+
+
+app.use(router);
 
 
 // ROUTES

@@ -1,6 +1,7 @@
 /**
  * @param { import('knex').Knex } knex
  * @returns { Promise<void> }
+ * TO RUN MIGRATIONS: npx knex migrate:latest --knexfile db/knexfile.js
  */
 exports.up = function (knex) {
   return (

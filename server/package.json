@@ -4,6 +4,9 @@
   "description": "Xccelerate Backend Project: Recipe app",
   "main": "server.js",
   "scripts": {
+    "migrate": "npx knex migrate:latest --knexfile db/knexfile.js",
+    "rollback": "npx knex migrate:rollback --knexfile db/knexfile.js",
+    "seed": "npx knex seed:run --knexfile db/knexfile.js",
     "start": "nodemon server.js",
     "test": "jest"
   },
