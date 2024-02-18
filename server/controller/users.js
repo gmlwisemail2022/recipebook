@@ -1,11 +1,13 @@
+// initialize the user service
 const userService = require("../service/users.js");
 
+// All user related CRUD operations are handled in the user controller
 class UserController {
     async createUser(req, res) {
         try {
             const userDto = req.body;
-            const id = await userService.createUser(userDto);
-            res.status(201).json({id});
+            await userService.createUser(userDto);
+            res.status(201).json({message: `Welcome ${userDto.username}, thanks for creating an account!`});
         } catch (error) {
             res.status(500).json({error: error.message});
         }
