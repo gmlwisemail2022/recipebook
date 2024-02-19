@@ -43,6 +43,32 @@ class UserController {
             res.status(500).json({error: error.message});
         }
     }
+    async updateEmail(req, res) {
+        try {
+            // the req is the parameter username from the client
+            const username = req.params.username;
+            // the req is the parameter email from the client
+            const email = req.body.email;
+            // calls the updateEmail method from the user service
+            await userService.updateEmail(username, email);
+            res.status(200).json({message: "Email updated"});
+        } catch (error) {
+            res.status(500).json({error: error.message});
+        }
+    }
+    async updateAdmin(req, res) {
+        try {
+            // the req is the parameter username from the client
+            const username = req.params.username;
+            // the req is the parameter admin from the client
+            const admin = req.body.admin;
+            // calls the updateAdmin method from the user service
+            await userService.updateAdmin(username, admin);
+            res.status(200).json({message: "Admin status updated"});
+        } catch (error) {
+            res.status(500).json({error: error.message});
+        }
+    }
 }
 
 module.exports = new UserController;

@@ -18,6 +18,14 @@ class UserService {
         // calls the updatePassword method from the userDAO
         await userDAO.updatePassword(username, password);
     }
+    async updateEmail(username, email) {
+        // calls the updateEmail method from the userDAO
+        await userDAO.updateEmail(username, email);
+    }
+    async updateAdmin(username, admin) {
+        // calls the updateAdmin method from the userDAO
+        await userDAO.updateAdmin(username, admin);
+    }
 }
 
 module.exports = new UserService;

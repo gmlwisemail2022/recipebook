@@ -38,6 +38,20 @@ class UserDAO {
             .where({username})
             .update({password});
     }
+    // Function to update a user's email
+    async updateEmail(username, email) {
+        await db('users')
+        // PSQL equivalent: UPDATE users SET email = email WHERE username = username
+            .where({username})
+            .update({email});
+    }
+    // Function to update users admin status
+    async updateAdmin(username, admin) {
+        await db('users')
+        // PSQL equivalent: UPDATE users SET admin = admin WHERE username = username
+            .where({username})
+            .update({admin});
+    }
 }
 
 module.exports = new UserDAO;

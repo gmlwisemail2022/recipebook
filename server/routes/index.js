@@ -10,8 +10,12 @@ const router = express.Router();
 router.post("/user", userController.createUser);
 // Read a user in the browser. Make sure to use the correct URL: http://localhost:3000/user/:username
 router.get("/user/:username", userController.getUser);
-// Update a user's password in the browser. Make sure to use the correct URL: http://localhost:3000/user/:username
+// Update a user's password, in the browser. Make sure to use the correct URL: http://localhost:3000/user/:username
 router.put("/user/updatePassword/:username", userController.updatePassword);
+// Update a user's email, in the browser. Make sure to use the correct URL: http://localhost:3000/user/:username
+router.put("/user/updateEmail/:username", userController.updateEmail);
+// Update a user's admin status, in the browser. Make sure to use the correct URL: http://localhost:3000/user/:username
+router.put("/user/updateAdmin/:username", userController.updateAdmin);
 
 
 //recipe routes     -temp- (glen added feb 19)
