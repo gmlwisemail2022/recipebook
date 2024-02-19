@@ -66,6 +66,13 @@ class UserDAO {
             .where({username})
             .update({full_name});
     }
+    // Function to delete a user
+    async deleteUser(username) {
+        await db('users')
+        // PSQL equivalent: DELETE FROM users WHERE username = username
+            .where({username})
+            .del();
+    }
 }
 
 module.exports = new UserDAO;

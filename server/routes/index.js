@@ -5,7 +5,7 @@ const express = require("express");
 const userController = require("../controller/users.js");
 const router = express.Router();
 
-// CRUD operations
+// CRUD operations for users table
 // Create a user in the browser. Make sure to use the correct URL: http://localhost:3000/user
 router.post("/user", userController.createUser);
 // Read a user in the browser. Make sure to use the correct URL: http://localhost:3000/user/:username
@@ -20,6 +20,8 @@ router.put("/user/updateAdmin/:username", userController.updateAdmin);
 router.put("/user/updateUsername/:user_id", userController.updateUsername);
 // Update a user's full name, in the browser. Make sure to use the correct URL: http://localhost:3000/user/:username
 router.put("/user/updateFullName/:username", userController.updateFullName);
+// Delete a user in the browser. Make sure to use the correct URL: http://localhost:3000/user/:username
+router.delete("/user/:username", userController.deleteUser);
 
 
 //recipe routes     -temp- (glen added feb 19)
