@@ -31,6 +31,13 @@ class UserDAO {
             .first();
         return user;
     }
+    // Function to update a user's password
+    async updatePassword(username, password) {
+        await db('users')
+        // PSQL equivalent: UPDATE users SET password = password WHERE username = username
+            .where({username})
+            .update({password});
+    }
 }
 
 module.exports = new UserDAO;

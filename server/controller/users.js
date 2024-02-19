@@ -30,6 +30,19 @@ class UserController {
             res.status(500).json({error: error.message});
         }
     }
+    async updatePassword(req, res) {
+        try {
+            // the req is the parameter username from the client
+            const username = req.params.username;
+            // the req is the parameter password from the client
+            const password = req.body.password;
+            // calls the updatePassword method from the user service
+            await userService.updatePassword(username, password);
+            res.status(200).json({message: "Password updated"});
+        } catch (error) {
+            res.status(500).json({error: error.message});
+        }
+    }
 }
 
 module.exports = new UserController;

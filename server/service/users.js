@@ -14,6 +14,10 @@ class UserService {
         const user = await userDAO.getUser(username);
         return user;
     }
+    async updatePassword(username, password) {
+        // calls the updatePassword method from the userDAO
+        await userDAO.updatePassword(username, password);
+    }
 }
 
 module.exports = new UserService;
