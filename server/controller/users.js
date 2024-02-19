@@ -38,7 +38,7 @@ class UserController {
             const password = req.body.password;
             // calls the updatePassword method from the user service
             await userService.updatePassword(username, password);
-            res.status(200).json({message: "Password updated"});
+            res.status(200).json({message: "Successful Update: Password updated to " + password + " for " + username + " account."});
         } catch (error) {
             res.status(500).json({error: error.message});
         }
@@ -51,7 +51,7 @@ class UserController {
             const email = req.body.email;
             // calls the updateEmail method from the user service
             await userService.updateEmail(username, email);
-            res.status(200).json({message: "Email updated"});
+            res.status(200).json({message: "Successful Update: Email updated to " + email + " for " + username + " account."});
         } catch (error) {
             res.status(500).json({error: error.message});
         }
@@ -64,7 +64,7 @@ class UserController {
             const admin = req.body.admin;
             // calls the updateAdmin method from the user service
             await userService.updateAdmin(username, admin);
-            res.status(200).json({message: "Admin status updated"});
+            res.status(200).json({message: "Successful Update: Admin status updated to " + admin + " for " + username + " account."});
         } catch (error) {
             res.status(500).json({error: error.message});
         }
@@ -77,7 +77,7 @@ class UserController {
             const username = req.body.username;
             // calls the updateUsername method from the user service
             await userService.updateUsername(user_id, username);
-            res.status(200).json({message: "Username updated"});
+            res.status(200).json({message: "Successful Update: Username updated to " + username});
         } catch (error) {
             res.status(500).json({error: error.message});
         }
@@ -90,7 +90,7 @@ class UserController {
             const full_name = req.body.full_name;
             // calls the updateFullName method from the user service
             await userService.updateFullName(username, full_name);
-            res.status(200).json({message: "Full name updated"});
+            res.status(200).json({message: "Successful Update: Full name updated to " + full_name + " for " + username + " account."});
         } catch (error) {
             res.status(500).json({error: error.message});
         }
