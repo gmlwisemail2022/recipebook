@@ -11,6 +11,7 @@ router.post("/user", userController.createUser);
 // Read a user in the browser. Make sure to use the correct URL: http://localhost:3000/user/:username
 router.get("/user/:username", userController.getUser);
 
+
 //recipe routes     -temp- (glen added feb 19)
 const recipeService = require("../service/recipe");
 router.get("/list", recipeService.list.bind(recipeService)); // get the recipe list
