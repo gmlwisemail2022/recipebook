@@ -1,10 +1,14 @@
 // imports the data access object for users and creates a user service class
 const userDAO = require("../data_access_object/users.js");
+const bcrypt = require("bcrypt");
 
 class UserService {
     // userDto is an object with the following properties: username, password, email, full_name, admin
     async createUser(userDto) {
+        const hashedPassword = await bcrypt.hash(userDto.password, 10);
+        userDto.password = hashedPassword;
         const {username, password, email, full_name, admin} = userDto;
+
         // calls the createUser method from the userDAO
         const id = await userDAO.createUser(username, password, email, full_name, admin);
         return id;

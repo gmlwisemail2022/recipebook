@@ -9,7 +9,7 @@ exports.up = function (knex) {
       .createTable("users", (table) => {
         table.increments("user_id").primary();
         table.string("username", 20).notNullable().unique();
-        table.string("password", 20).notNullable();
+        table.string("password").notNullable();
         table.string("email").notNullable().unique();
         table.string("full_name").notNullable();
         table.boolean("admin").notNullable().defaultTo(false);
