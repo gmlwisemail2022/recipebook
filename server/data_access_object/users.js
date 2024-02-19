@@ -59,6 +59,13 @@ class UserDAO {
             .where({user_id})
             .update({username});
     }
+    // Function to update a users full name
+    async updateFullName(username, full_name) {
+        await db('users')
+        // PSQL equivalent: UPDATE users SET full_name = full_name WHERE username = username
+            .where({username})
+            .update({full_name});
+    }
 }
 
 module.exports = new UserDAO;

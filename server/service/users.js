@@ -30,6 +30,10 @@ class UserService {
         // calls the updateUsername method from the userDAO
         await userDAO.updateUsername(user_id, username);
     }
+    async updateFullName(user_id, full_name) {
+        // calls the updateFullName method from the userDAO
+        await userDAO.updateFullName(user_id, full_name);
+    }
 }
 
 module.exports = new UserService;

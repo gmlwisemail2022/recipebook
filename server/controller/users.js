@@ -82,6 +82,19 @@ class UserController {
             res.status(500).json({error: error.message});
         }
     }
+    async updateFullName(req, res) {
+        try {
+            // the req is the parameter username from the client
+            const username = req.params.username;
+            // the req is the parameter full_name from the client
+            const full_name = req.body.full_name;
+            // calls the updateFullName method from the user service
+            await userService.updateFullName(username, full_name);
+            res.status(200).json({message: "Full name updated"});
+        } catch (error) {
+            res.status(500).json({error: error.message});
+        }
+    }
 }
 
 module.exports = new UserController;

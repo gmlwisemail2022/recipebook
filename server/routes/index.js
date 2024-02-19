@@ -18,6 +18,8 @@ router.put("/user/updateEmail/:username", userController.updateEmail);
 router.put("/user/updateAdmin/:username", userController.updateAdmin);
 // Update a user's username, in the browser. Make sure to use the correct URL: http://localhost:3000/user/:username
 router.put("/user/updateUsername/:user_id", userController.updateUsername);
+// Update a user's full name, in the browser. Make sure to use the correct URL: http://localhost:3000/user/:username
+router.put("/user/updateFullName/:username", userController.updateFullName);
 
 
 //recipe routes     -temp- (glen added feb 19)
