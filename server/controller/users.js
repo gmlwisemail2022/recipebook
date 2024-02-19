@@ -72,11 +72,11 @@ class UserController {
     async updateUsername(req, res) {
         try {
             // the req is the parameter username from the client
-            const email = req.params.email;
+            const user_id = req.params.user_id;
             // the req is the parameter newUsername from the client
             const username = req.body.username;
             // calls the updateUsername method from the user service
-            await userService.updateUsername(email, username);
+            await userService.updateUsername(user_id, username);
             res.status(200).json({message: "Username updated"});
         } catch (error) {
             res.status(500).json({error: error.message});

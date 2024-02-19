@@ -26,9 +26,9 @@ class UserService {
         // calls the updateAdmin method from the userDAO
         await userDAO.updateAdmin(username, admin);
     }
-    async updateUsername(email, username) {
+    async updateUsername(user_id, username) {
         // calls the updateUsername method from the userDAO
-        await userDAO.updateUsername(email, username);
+        await userDAO.updateUsername(user_id, username);
     }
 }
 

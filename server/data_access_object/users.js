@@ -53,10 +53,10 @@ class UserDAO {
             .update({admin});
     }
     // Function to update a users username
-    async updateUsername(email, username) {
+    async updateUsername(user_id, username) {
         await db('users')
-        // PSQL equivalent: UPDATE users SET username = newUsername WHERE username = username
-            .where({email})
+        // PSQL equivalent: UPDATE users SET username = username WHERE user_id = user_id
+            .where({user_id})
             .update({username});
     }
 }
