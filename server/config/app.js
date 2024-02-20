@@ -31,5 +31,9 @@ app.get('/', (req, res) => {
     res.render('home.hbs')
 });
 
+app.get('/login', (req, res) => {
+    res.render('login.hbs')
+});
+
 // module is exported to the server
 module.exports = app;
