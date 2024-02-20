@@ -35,5 +35,9 @@ app.get('/login', (req, res) => {
     res.render('login.hbs')
 });
 
+app.get('/register', (req, res) => {
+    res.render('register.hbs')
+});
+
 // module is exported to the server
 module.exports = app;
