@@ -33,7 +33,6 @@ exports.up = function (knex) {
         return knex.schema.createTable("favorites", (table) => {
           table.increments("favorite_id").primary();
           table.timestamp("created_at").defaultTo(knex.fn.now());
-          table.timestamp("updated_at").defaultTo(knex.fn.now());
           table.integer("user_id").references("users.user_id");
           table.integer("recipe_id").references("recipes.recipe_id");
         });
