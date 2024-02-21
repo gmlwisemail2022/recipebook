@@ -7,7 +7,7 @@ const router = express.Router();
 
 // CRUD operations for users table
 // Create a user in the browser. Make sure to use the correct URL: http://localhost:3000/user
-router.post("/user", userController.createUser);
+router.post("/register", userController.createUser);
 // Read a user in the browser. Make sure to use the correct URL: http://localhost:3000/user/:username
 router.get("/user/:username", userController.getUser);
 // Update a user's password, in the browser. Make sure to use the correct URL: http://localhost:3000/user/:username
