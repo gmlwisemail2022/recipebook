@@ -1,0 +1,97 @@
+<html lang="en">
+  <head>
+    <!-- Head section remains the same -->
+    <link rel="stylesheet" href="/css/recipe.css" />
+    <!-- Link to Font Awesome CDN -->
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
+    />
+    <!-- Link to Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/5.4.0/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <header>
+      <!-- Header section remains the same -->
+      ...
+    </header>
+    <nav class="navigation-bar">
+      <div class="section-1">
+        <ul class="section-1-menu">
+          <li>Home</li>
+          <li class="dropdown">
+            <a href="javascript:void(0)" class="dropbtn">Meals</a>
+            <div class="dropdown-content">
+              <a href="#">Appetizers</a>
+              <a href="#">Entrees</a>
+              <a href="#">Sides</a>
+              <a href="#">Desserts</a>
+            </div>
+          </li>
+          <li class="dropdown">
+            <a href="javascript:void(0)" class="dropbtn">Cuisine</a>
+            <div class="dropdown-content">
+              <a href="#">Western</a>
+              <a href="#">European</a>
+              <a href="#">Mediterranean</a>
+              <a href="#">Asian</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="section-2">
+        <ul class="section-2-menu">
+          {{#if isLoggedIn}}
+            <li>Dashboard</li>
+            <li>Profile</li>
+            <li>Logout</li>
+          {{else}}
+            <li>Login</li>
+            <li>Signup</li>
+          {{/if}}
+        </ul>
+      </div>
+    </nav>
+    {{{body}}}
+    <section>
+      <h1>Recipes</h1>
+      <div class="row">
+        {{#each recipes}}
+          <div class="col-sm-4">
+            <div class="slender-card">
+              <div class="card-body">
+                <h5 class="card-title">Title:</h5>
+                <p class="card-text">{{this.title}}</p>
+                <h5 class="card-title">Type:</h5>
+                <p class="card-text">{{this.type}}</p>
+                <h5 class="card-title">Origin:</h5>
+                <p class="card-text">{{this.origin}}</p>
+                <h5 class="card-title">Servings:</h5>
+                <p class="card-text">{{this.servings}}</p>
+                <h5 class="card-title">Added By:</h5>
+                <p class="card-text">{{this.username}}</p>
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary heart-button"
+                  data-recipe-id="{{this.id}}"
+                >
+                  <i
+                    class="far fa-heart heart-icon"
+                    data-recipe-id="{{this.id}}"
+                  ></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        {{/each}}
+      </div>
+    </section>
+    <script src="/js/bootstrap/recipeClient.js"></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/5.4.0/js/bootstrap.bundle.min.js"
+    ></script>
+  </body>
+</html>
