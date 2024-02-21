@@ -23,16 +23,41 @@ router.put("/user/updateFullName/:username", userController.updateFullName);
 // Delete a user in the browser. Make sure to use the correct URL: http://localhost:3000/user/:username
 router.delete("/user/:username", userController.deleteUser);
 
-
 //recipe routes     -temp- (glen added feb 19)
-const recipeService = require("../service/recipe");
-router.get("/list", recipeService.list.bind(recipeService)); // get the recipe list
-router.get("/search/:keyword", recipeService.search.bind(recipeService)); // search a recipe
-router.post("/add", recipeService.add.bind(recipeService)); // add a new recipe
-// router.put('/edit/:id', this.edit.bind(this)); // Edit a recipe (not yet in function list)
-router.delete("/delete/:id", recipeService.delete.bind(recipeService)); // add a new recipe
+// temp note: flow change index.js >> recipeController >> RecipeService instead of index.js >> RecipeService
+const recipeController = require("../controller/recipe.js");
+
+// list all the recipes via url http://localhost:3000/recipe/list
+router.get("/recipe", recipeController.listAll.bind(recipeController));
+// lets user see the list of added recipe (don't include recipe from other users) via url http://localhost:3000/recipe/list/:userId
+router.get(
+  "/recipe/list/:userId",
+  recipeController.listAdded.bind(recipeController)
+);
+//search a recipe via url http://localhost:3000/recipe/:keyword
+router.post(
+  "/recipe/search/:keyword",
+  recipeController.search.bind(recipeController)
+);
+//add a recipe via url http://localhost:3000/recipe/add
+router.post("/recipe/add", recipeController.add.bind(recipeController)); // add a new recipe
+// lets user edit added recipe via url http://localhost:3000/recipe/edit/:recipeId
+router.put(
+  "/recipe/edit/:recipeId",
+  recipeController.edit.bind(recipeController)
+);
+// lets user delete added recipe via url http://localhost:3000/recipe/delete/:recipeId
+router.delete(
+  "/recipe/delete/:recipeId",
+  recipeController.delete.bind(recipeController)
+);
+
+// all routes above are tested ok via postman (except for: http://localhost:3000/recipe/list/:userId)
+/*
+// may not to be routed via url instead use a button and directly update the database when a button is clicked on the front end
 router.post("/favorite/:id", recipeService.favorite.bind(recipeService));
 router.post("/unfavorite/:id", recipeService.unfavorite.bind(recipeService));
+*/
 
 // Export the router to be used in the app.js file
 module.exports = router;

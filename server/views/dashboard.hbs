@@ -1,0 +1,41 @@
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Note Taking App</title>
+  </head>
+
+  <body>
+    <h1>Welcome, {{username}}!</h1>
+
+    <h2>Your Recipes:</h2>
+    <div class="row">
+      {{! // RENDER EACH recipe }}
+      {{#each recipe}}
+        <div class="col-sm-3">
+          <img src="{{image}}" alt="{{name}}" />
+          <h1>Title:</h1>
+          {{title}}
+          <h3>Type:</h3>
+          {{type}}
+          <h3>Origin:</h3>
+          {{origin}}
+          <h3>Servings:</h3>
+          {{servings}}
+          <h3>Added By:</h3>
+          {{username}}
+          <!-- add rating here -->
+          <!-- add favorite heart icon here -->
+        </div>
+      {{/each}}
+    </div>
+
+    <h2>Add a New Recipe:</h2>
+    <form action="/add-note" method="post">
+      <input type="text" name="note" required />
+      <button type="submit">Add Note</button>
+    </form>
+  </body>
+
+</html>

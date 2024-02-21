@@ -1,23 +1,48 @@
 // Set up all recipe services/ methods here:
 // current list of methods are: list, search, add, *edit, delete, favorite, and unfavorite
 
+const { config } = require("dotenv");
+const db = require("../db/db");
+
 class RecipeService {
-  constructor(knex) {
-    this.knex = knex;
+  constructor(db) {
+    this.db = db;
   }
 
   // insert recipe methods here:
 
-  //list recipe (get all recipe >>> to determine how many recipes will be selected or to get all then split into pages)
-  async list() {
-    recpieList = await this.knex("recipes").select("*");
-    return recipeList;
+  //list all recipes
+  async listAll() {
+    try {
+      const recipeList = await this.db("recipes").select("*");
+      console.log(recipeList);
+      return recipeList;
+    } catch (error) {
+      // Handle the error appropriately
+      console.error(error);
+      throw error;
+    }
+  }
+
+  //list only recipes added by a specific user
+  async listAdded(id) {
+    try {
+      const recipeList = await this.db("recipes")
+        .select("*")
+        .where({ user_id: id });
+      console.log(recipeList);
+      return recipeList;
+    } catch (error) {
+      // Handle the error appropriately
+      console.error(error);
+      throw error;
+    }
   }
 
   //search recipe
   async search(keyword) {
     try {
-      const recipes = await this.knex("recipes")
+      const recipes = await this.db("recipes")
         .whereRaw(`LOWER(title) LIKE LOWER('%${keyword}%')`) // we convert both search string and database search
         .orWhereRaw(`LOWER(ingredients) LIKE LOWER('%${keyword}%')`) // into lower case to make it case-insensitive
         .orWhereRaw(`LOWER(instructions) LIKE LOWER('%${keyword}%')`)
@@ -33,7 +58,8 @@ class RecipeService {
     try {
       const { title, ingredients, servings, instructions, user_id } =
         recipeData; //<< to pass user_id as well
-      const newRecipe = await this.knex("recipes")
+
+      const newRecipe = await this.db("recipes")
         .insert({
           title,
           ingredients,
@@ -50,16 +76,42 @@ class RecipeService {
     }
   }
 
-  //edit recipe (shelf - not priority as of the moment)
+  //edit recipe
+  async edit(recipeData, recipeId) {
+    try {
+      const { title, ingredients, servings, instructions, user_id } =
+        recipeData; //<< to pass user_id as well
 
-  //delete recipe (delete a specific recipe)
-  async delete(id) {
-    await this.knex("favorites") //delete favorites first because this is the sub table
+      const newRecipe = await this.db("recipes")
+        .update({
+          title,
+          ingredients,
+          servings,
+          instructions,
+          user_id,
+          updated_at: new Date().toISOString(), // update only the update date (create date reamin unchanged)
+        })
+        .where({ user_id: user_id })
+        .where({ recipe_id: recipeId })
+        .returning("*");
+      console.log("returned edited", newRecipe);
+      return newRecipe[0];
+    } catch (error) {
+      throw new Error("Error updating recipe: " + error.message);
+    }
+  }
+
+  //delete recipe (delete a specific recipe and all its favorites)
+  async delete(recipeId) {
+    const deleteFavoritesResult = await this.db("favorites") //delete favorites first because this is the sub table
       .delete()
-      .where({ recipe_id: id });
-    await this.knex("recipes") // delete recipe
+      .where({ recipe_id: recipeId });
+    const deleteRecipeResult = await this.db("recipes") // delete recipe
       .delete()
-      .where({ recipe_id: id });
+      .where({ recipe_id: recipeId });
+    if (deleteFavoritesResult === 0 && deleteRecipeResult === 0) {
+      throw new Error("Item not found");
+    }
     return "Done";
   }
 
@@ -93,4 +145,4 @@ class RecipeService {
   }
 }
 
-module.exports = new RecipeService();
+module.exports = RecipeService;
