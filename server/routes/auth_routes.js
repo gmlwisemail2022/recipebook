@@ -1,5 +1,4 @@
 const passport = require('passport');
-
 const router = require('express').Router();
 const session = require('express-session');
 router.use(session({ secret: 'anything' }));
@@ -10,17 +9,12 @@ router.use(passport.session());
 require('../config/passport_setup.js');
 
 function isLoggedIn(req, res, next) {
-    if(req.isAuthenticated()) {
-        return next();
-    }
-    res.redirect('/auth/failure');
+    req.user ? next() : res.render('failure.hbs');
 }
 
-
-// auth login
-router.get('/login', (req, res) => {
-    res.render('login.hbs');
-});
+function notLoggedIn(req, res, next) {
+    req.user ? res.render('failure.hbs') : next();
+}
 
 // auth logout
 router.get('/logout', (req, res) => {
@@ -36,19 +30,34 @@ router.get('/google',
 );
 
 // callback route for google to redirect to
-router.get('/google/callback',
-    passport.authenticate('google', {
-        successRedirect: '/protected',
+router.get('/google/callback', passport.authenticate('google', {
+        successRedirect: '/',
         failureRedirect: '/failure'
     })
 );
+
+// auth with local
+router.post('/login', passport.authenticate('local-login', {
+    successRedirect: '/',
+    failureRedirect: '/failure'
+}));
+
+router.get('/login', notLoggedIn, (req, res) => {
+    res.render('login.hbs');
+});
 
 router.get('/failure', (req, res) => {
     res.render('failure.hbs');
 });
 
 router.get('/protected', isLoggedIn, (req, res) => {
-    res.send('You are logged in');
+    res.send('you are logged in, this is your profile - ' + req.user.displayName);
+});
+
+router.get('/logout', (req, res) => {
+    req.logout();
+    req.session = null;
+    res.send('you are logged out');
 });
 
 module.exports = router;
