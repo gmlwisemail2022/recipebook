@@ -13,7 +13,7 @@ function isLoggedIn(req, res, next) {
     if(req.isAuthenticated()) {
         return next();
     }
-    res.redirect('/auth/login');
+    res.redirect('/auth/failure');
 }
 
 
@@ -36,18 +36,18 @@ router.get('/google',
 );
 
 // callback route for google to redirect to
-router.get('/google/callback', (req, res) => {
+router.get('/google/callback',
     passport.authenticate('google', {
-        successRedirect: '/',
+        successRedirect: '/protected',
         failureRedirect: '/failure'
-    });
-});
+    })
+);
 
 router.get('/failure', (req, res) => {
     res.render('failure.hbs');
 });
 
-router.get('/profile', isLoggedIn, (req, res) => {
+router.get('/protected', isLoggedIn, (req, res) => {
     res.send('You are logged in');
 });
 
