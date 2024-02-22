@@ -29,22 +29,22 @@ router.get('/logout', (req, res) => {
 });
 
 // auth with google
-router.get('/google', (req, res) => {
+router.get('/google',
     passport.authenticate('google', {
-        scope: ['email']
-    });
-});
+        scope: ['email', 'profile']
+    })
+);
 
 // callback route for google to redirect to
 router.get('/google/callback', (req, res) => {
     passport.authenticate('google', {
-        successRedirect: '/profile',
+        successRedirect: '/',
         failureRedirect: '/failure'
     });
 });
 
 router.get('/failure', (req, res) => {
-    res.send('Failed to log in');
+    res.render('failure.hbs');
 });
 
 router.get('/profile', isLoggedIn, (req, res) => {
