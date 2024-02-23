@@ -12,10 +12,10 @@ class RecipeController {
   // list all recipe depending on the param filters
   async listAll(req, res) {
     const { param } = req.params;
-    console.log("req.parms", req.params);
+    console.log("via list all req.parms", req.params);
     let recipeList;
 
-    // checks whether there is param or not
+    // checks whether there is param or none
     switch (true) {
       case !param: // if not param, get all recipes
         // No parameter provided, list all recipes
@@ -65,8 +65,8 @@ class RecipeController {
     try {
       const recipeDetail = await recipeService.listDetail(recipeId);
       console.log("recipe details are:", recipeDetail.length);
-      // Split ingredients by comma
-      recipeDetail[0].ingredients = recipeDetail[0].ingredients.split(",");
+      // Split ingredients by comma or semicolon
+      recipeDetail[0].ingredients = recipeDetail[0].ingredients.split(/[;,]/);
 
       // Split instructions by period
       recipeDetail[0].instructions = recipeDetail[0].instructions.split(".");
@@ -79,10 +79,15 @@ class RecipeController {
 
   // list the details user added recipe
 
-  async listAdded(req, res) {
+  async listUserRecipe(req, res) {
+    const { userId } = req.params;
+    console.log(
+      "processing list user recipes - controller - user Id is ",
+      req.params
+    );
     try {
-      const recipeList = await recipeService.listAdded();
-      res.render("recipe-detail", { recipe: recipeList });
+      const recipeList = await recipeService.listUserRecipe(userId);
+      res.render("dashboard", { recipes: recipeList });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -99,13 +104,16 @@ class RecipeController {
   }
 
   async add(req, res) {
+    console.log("add recipe - controller");
     // note need to add logic to redirect to user login if user currently not logged in (user_id = null). Else, proceed with add recipe request
     //option 2: no need to create check here, simply the user can't see the add feature if not logged in
     //console.log("add params", req.params);
+    const recipeData = req.body;
+    const { userId } = req.params;
+    console.log("recipeData", recipeData.length, "userId", userId);
     try {
-      const recipeData = req.body;
-      await recipeService.add(recipeData);
-      res.status(201).json("Recipe added!");
+      const newRecipe = await recipeService.add(recipeData, userId);
+      res.status(201).json(newRecipe);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

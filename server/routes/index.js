@@ -40,19 +40,24 @@ router.get(
   recipeController.listDetail.bind(recipeController)
 );
 
-// lets user see the list of added recipe (don't include recipe from other users) via url http://localhost:3000/recipe/list/:userId
-
-router.get(
-  "/recipe/list/:userId",
-  recipeController.listAdded.bind(recipeController)
-);
 //search a recipe via url http://localhost:3000/recipe/:keyword
 router.post(
   "/recipe/search/:keyword",
   recipeController.search.bind(recipeController)
 );
+
+// lets user see the list of added recipe (don't include recipe from other users) via url http://localhost:3000/recipe/list/:userId
+// show the dashboard of a specific user (dashboard link visible only if user is logged-in)
+router.get(
+  "/dashboard/:userId",
+  recipeController.listUserRecipe.bind(recipeController)
+);
+
 //add a recipe via url http://localhost:3000/recipe/add
-router.post("/recipe/add", recipeController.add.bind(recipeController)); // add a new recipe
+router.post(
+  "/dashboard/submit/:userId/",
+  recipeController.add.bind(recipeController)
+); // add a new recipe
 // lets user edit added recipe via url http://localhost:3000/recipe/edit/:recipeId
 router.put(
   "/recipe/edit/:recipeId",

@@ -71,12 +71,15 @@ class RecipeService {
   }
 
   //list only recipes added by a specific user (for dashboard listing)
-  async listAdded(id) {
+  async listUserRecipe(userId) {
+    console.log("looking for user added recipe in db");
     try {
+      //temp override
+      userId = 3;
       const recipeList = await this.db("recipes")
         .select("*")
-        .where({ user_id: id });
-      console.log(recipeList);
+        .where({ user_id: userId });
+      console.log("recipe obtained by user: ", recipeList[0].user_id);
       return recipeList;
     } catch (error) {
       // Handle the error appropriately
@@ -99,35 +102,29 @@ class RecipeService {
     }
   }
 
-  //add recipe
-  async add(recipeData) {
-    try {
-      const {
-        title,
-        meal_type,
-        cuisine,
-        ingredients,
-        servings,
-        instructions,
-        user_id,
-      } = recipeData; //<< to pass user_id as well
+  // Add recipe method
 
+  async add(recipeData, userId) {
+    try {
+      console.log("adding new recipe to db");
+      // Insert the new recipe into the database
       const newRecipe = await this.db("recipes")
         .insert({
-          title,
-          meal_type,
-          cuisine,
-          ingredients,
-          servings,
-          instructions,
-          user_id,
-          created_at: new Date().toISOString(), // Set the created_at value to the current timestamp
-          updated_at: new Date().toISOString(), // same create and update date during creation
+          title: recipeData.title,
+          meal_type: recipeData.meal_type,
+          cuisine: recipeData.cuisine,
+          servings: recipeData.servings,
+          ingredients: recipeData.ingredients,
+          instructions: recipeData.instructions,
+          user_id: userId,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
         })
         .returning("*");
+
       return newRecipe[0];
     } catch (error) {
-      throw new Error("Error creating recipe: " + error.message);
+      throw new Error("Error adding recipe: " + error.message);
     }
   }
 

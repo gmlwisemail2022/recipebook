@@ -51,11 +51,15 @@
       <div class="section-2">
         <ul class="section-2-menu">
           {{#if isLoggedIn}}
-            <li>Dashboard</li>
+            <!-- may need to sync user_id variable -->
+            <a onclick="dashboardClick({{userId}})">Dashboard</a>
+            </li>
             <li>Profile</li>
             <li>Logout</li>
           {{else}}
-            <li>Login</li>
+            <!-- temp only to see changes while waiting for user auth -->
+            <a onclick="dashboardClick({{userId}})">Login</a>
+
             <li>Signup</li>
           {{/if}}
         </ul>
@@ -72,9 +76,9 @@
                 <h5 class="card-title">Title:</h5>
                 <p class="card-text">{{this.title}}</p>
                 <h5 class="card-title">Type:</h5>
-                <p class="card-text">{{this.type}}</p>
+                <p class="card-text">{{this.meal_type}}</p>
                 <h5 class="card-title">Cuisine:</h5>
-                <p class="card-text">{{this.Cuisine}}</p>
+                <p class="card-text">{{this.cuisine}}</p>
                 <h5 class="card-title">Servings:</h5>
                 <p class="card-text">{{this.servings}}</p>
                 <h5 class="card-title">Added By:</h5>
@@ -96,5 +100,6 @@
     <script
       src="https://stackpath.bootstrapcdn.com/bootstrap/5.4.0/js/bootstrap.bundle.min.js"
     ></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   </body>
 </html>

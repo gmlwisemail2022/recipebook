@@ -1,41 +1,103 @@
 <html lang="en">
-
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Note Taking App</title>
+    <!-- Head section remains the same -->
+    <link rel="stylesheet" href="/css/recipe.css" />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/5.4.0/css/bootstrap.min.css"
+    />
   </head>
-
   <body>
-    <h1>Welcome, {{username}}!</h1>
+    <header>
+      <!-- Header section remains the same -->
+    </header>
+    <nav class="navigation-bar">
+      <!-- Navigation section remains the same -->
+    </nav>
+    <section>
+      <!-- Recipe details section starts -->
+      <div class="row">
+        {{#each recipes}}
+          <div class="col-sm-3">
+            <div class="slender-card">
+              <div class="card-body" onclick="recipeClick({{this.recipe_id}})">
+                <h5 class="card-title">Title:</h5>
+                <p class="card-text">{{this.title}}</p>
+                <h5 class="card-title">Type:</h5>
+                <p class="card-text">{{this.meal_type}}</p>
+                <h5 class="card-title">Cuisine:</h5>
+                <p class="card-text">{{this.cuisine}}</p>
+              </div>
+              <button
+                type="button"
+                class="btn btn-outline-secondary heart-button"
+                data-recipe-id="{{this.recipe_id}}"
+              >
+                <i class="far fa-heart heart-icon"></i>
+              </button>
+            </div>
+          </div>
+        {{/each}}
+      </div>
+      <!-- Recipe details section ends -->
 
-    <h2>Your Recipes:</h2>
-    <div class="row">
-      {{! // RENDER EACH recipe }}
-      {{#each recipe}}
-        <div class="col-sm-3">
-          <img src="{{image}}" alt="{{name}}" />
-          <h1>Title:</h1>
-          {{title}}
-          <h3>Type:</h3>
-          {{type}}
-          <h3>Origin:</h3>
-          {{origin}}
-          <h3>Servings:</h3>
-          {{servings}}
-          <h3>Added By:</h3>
-          {{username}}
-          <!-- add rating here -->
-          <!-- add favorite heart icon here -->
+       <!-- Form section starts -->
+      <h2>Add/Edit Recipe</h2>
+      <form id="recipeForm">
+        <div class="form-group">
+          <label for="title">Title:</label>
+          <input type="text" id="title" name="title" value="{{recipe.title}}" required>
         </div>
-      {{/each}}
-    </div>
-
-    <h2>Add a New Recipe:</h2>
-    <form action="/add-note" method="post">
-      <input type="text" name="note" required />
-      <button type="submit">Add Note</button>
-    </form>
+        <div class="form-group">
+          <label for="meal_type">Meal Type:</label>
+          <select id="meal_type" name="meal_type" required>
+            <option value="Appetizers"{{#if (eq recipe.meal_type "Appetizers")}} selected{{/if}}>Appetizers</option>
+            <option value="Entrees"{{#if (eq recipe.meal_type "Entrees")}} selected{{/if}}>Entrees</option>
+            <option value="Sides"{{#if (eq recipe.meal_type "Sides")}} selected{{/if}}>Sides</option>
+            <option value="Desserts"{{#if (eq recipe.meal_type "Desserts")}} selected{{/if}}>Desserts</option>
+            <option value="Drinks"{{#if (eq recipe.meal_type "Drinks")}} selected{{/if}}>Drinks</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="cuisine">Cuisine:</label>
+          <select id="cuisine" name="cuisine" required>
+            <option value="Western"{{#if (eq recipe.cuisine "Western")}} selected{{/if}}>Western</option>
+            <option value="European"{{#if (eq recipe.cuisine "European")}} selected{{/if}}>European</option>
+            <option value="Mediterranean"{{#if (eq recipe.cuisine "Asian")}} selected{{/if}}>Mediterranean</option>
+            <option value="Asian"{{#if (eq recipe.cuisine "Asian")}} selected{{/if}}>Asian</option>
+            <option value="African"{{#if (eq recipe.cuisine "Asian")}} selected{{/if}}>African</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="servings">Servings:</label>
+          <input type="number" id="servings" name="servings" value="{{recipe.servings}}" required>
+        </div>
+        <div class="form-group">
+          <label for="ingredients">Ingredients:</label>
+          <textarea id="ingredients" name="ingredients" rows="6" required>{{#each recipe.ingredients}}{{this}}{{/each}}</textarea>
+        </div>
+        <div class="form-group">
+          <label for="instructions">Instructions:</label>
+          <textarea id="instructions" name="instructions" rows="8" required>{{#each recipe.instructions}}{{this}}{{/each}}</textarea>
+        </div>
+        <div id="formButtons">
+          <button type="button" class="btn btn-primary" onclick="clearForm()">Add</button>
+          <button type="submit" class="btn btn-primary">Submit</button>
+          <button type="button" class="btn btn-primary" onclick="viewRecipe()">View</button>
+          <button type="button" class="btn btn-primary" onclick="deleteRecipe()">Delete</button>
+          <button type="button" class="btn btn-primary" onclick="editRecipe()">Edit</button>
+        </div>
+      </form>
+      <!-- Form section ends -->
+    </section>
+    <script src="/js/recipeClient.js"></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/5.4.0/js/bootstrap.bundle.min.js"
+    ></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   </body>
-
 </html>

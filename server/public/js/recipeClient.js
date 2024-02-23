@@ -14,22 +14,11 @@ heartButtons.forEach((button) => {
   });
 });
 
-// Event Listener for Navbar (meal types)
+// Attach event listener to the form submission
+const form = document.getElementById("recipeForm");
+form.addEventListener("submit", submitForm);
 
-// Event Listener for Navbar (cuisines)
-
-// Attach event listener to a recipe card
-/*
-heartButtons.forEach((button) => {
-  button.addEventListener("click", function () {
-    const recipeId = this.getAttribute("data-recipe-id");
-    console.log("recipeId", recipeId);
-    toggleFavorite(recipeId);
-  });
-});
-*/
-
-// all the front-end functions listed below:
+// all the front-end recipe functions listed below:
 // function to filter the recipes by a specific cuisine
 async function filterByParam(param) {
   console.log("search for recipe via param ", param);
@@ -58,13 +47,28 @@ async function recipeClick(recipeId) {
       url: `/recipe/details/${recipeId}`,
       type: "GET",
     });
-    // Redirect to the recipe page
+    // Direct to the recipe Detail page
     window.location.href = `/recipe/details/${recipeId}`;
     //isplayRecipeDetails(data); // Pass the data to the display function
     // Example: displayRecipes(data);
   } catch (error) {
-    // Handle any errors that occurred during the AJAX request.
     console.log("request error url:", `/recipe/details/${recipeId}`);
+    console.error(error);
+  }
+}
+
+async function dashboardClick(userId) {
+  console.log("dashboard clicked for userid", userId); // Log the original userId first
+  userId = 3; // Temporarily set userId to 3
+  try {
+    await fetch(`/dashboard/${userId}`, {
+      method: "GET",
+    });
+    // Direct to the dashboard page
+    window.location.href = `/dashboard/${userId}`;
+  } catch (error) {
+    // Handle any errors that occurred during the AJAX request.
+    console.log("request error url:", `/dashboard/${userId}`);
     console.error(error);
   }
 }
@@ -119,5 +123,48 @@ async function removeFromFavorites(userId, recipeId) {
     console.log("Removed recipe with ID:", recipeId, "from favorites");
   } catch (error) {
     console.error("Error removing recipe from favorites:", error);
+  }
+}
+
+// all front-end dashboard related functions below:
+
+async function submitForm(event) {
+  event.preventDefault(); // Prevent default form submission behavior
+
+  // Get the form data
+  const formData = new FormData(form);
+  const recipeData = {
+    title: formData.get("title"),
+    meal_type: formData.get("meal_type"),
+    cuisine: formData.get("cuisine"),
+    servings: formData.get("servings"),
+    ingredients: formData.get("ingredients"),
+    instructions: formData.get("instructions"),
+  };
+
+  // Check if any of the required fields are blank
+  for (const key in recipeData) {
+    if (recipeData[key].trim() === "") {
+      alert("Please fill in all the required fields.");
+      return false; // Return false to prevent form submission
+    }
+  }
+
+  console.log("Form data:", recipeData);
+
+  const userId = 3; // Temporary user id
+  try {
+    const response = await fetch(`/dashboard/submit/${userId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json", // Set content type to JSON
+      },
+      body: JSON.stringify(recipeData),
+    });
+    console.log("Form submitted successfully");
+    // Handle the response as needed
+  } catch (error) {
+    console.error("Error submitting form:", error);
+    // Handle any errors that occurred during the form submission
   }
 }

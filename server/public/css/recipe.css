@@ -88,3 +88,18 @@
 .bigger-font {
   font-size: 25px;
 }
+
+.col-sm-3 {
+  flex: 0 0 24%;
+  max-width: 24%;
+  padding-right: 10px;
+  padding-left: 10px;
+}
+
+#instructions {
+  width: 80%;
+}
+
+#ingredients {
+  width: 80%;
+}
