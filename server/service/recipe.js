@@ -15,7 +15,7 @@ class RecipeService {
   async listAll() {
     try {
       const recipeList = await this.db("recipes").select("*");
-      console.log(recipeList);
+      console.log("total otabined:", recipeList.length);
       return recipeList;
     } catch (error) {
       // Handle the error appropriately
@@ -24,7 +24,53 @@ class RecipeService {
     }
   }
 
-  //list only recipes added by a specific user
+  //list all recipes by meal type
+  async listMeal(param) {
+    try {
+      const recipeList = await this.db("recipes")
+        .select("*")
+        .where({ meal_type: param });
+      console.log("obtained all recipes for param", param);
+      console.log("total otabined:", recipeList.length);
+      return recipeList;
+    } catch (error) {
+      // Handle the error appropriately
+      console.error(error);
+      throw error;
+    }
+  }
+
+  //list all recipes by cuisine
+  async listCuisine(param) {
+    try {
+      const recipeList = await this.db("recipes")
+        .select("*")
+        .where({ cuisine: param });
+      console.log("obtained all recipes for param", param);
+      console.log("total otabined:", recipeList.length);
+      return recipeList;
+    } catch (error) {
+      // Handle the error appropriately
+      console.error(error);
+      throw error;
+    }
+  }
+
+  //list specific recipe by recipeId
+  async listDetail(recipeId) {
+    try {
+      const recipeList = await this.db("recipes")
+        .select("*")
+        .where({ recipe_id: recipeId });
+      return recipeList;
+    } catch (error) {
+      // Handle the error appropriately
+      console.error(error);
+      throw error;
+    }
+  }
+
+  //list only recipes added by a specific user (for dashboard listing)
   async listAdded(id) {
     try {
       const recipeList = await this.db("recipes")
@@ -56,12 +102,21 @@ class RecipeService {
   //add recipe
   async add(recipeData) {
     try {
-      const { title, ingredients, servings, instructions, user_id } =
-        recipeData; //<< to pass user_id as well
+      const {
+        title,
+        meal_type,
+        cuisine,
+        ingredients,
+        servings,
+        instructions,
+        user_id,
+      } = recipeData; //<< to pass user_id as well
 
       const newRecipe = await this.db("recipes")
         .insert({
           title,
+          meal_type,
+          cuisine,
           ingredients,
           servings,
           instructions,
@@ -85,6 +140,8 @@ class RecipeService {
       const newRecipe = await this.db("recipes")
         .update({
           title,
+          meal_type,
+          cuisine,
           ingredients,
           servings,
           instructions,
@@ -115,32 +172,71 @@ class RecipeService {
     return "Done";
   }
 
-  //favorite recipe
+  //favorite a recipe
   async favorite(userId, recipeId) {
     try {
-      const newFavorite = await this.knex("favorites")
-        .insert({
-          user_id: userId,
-          recipe_id: recipeId,
-          created_at: new Date().toISOString(), // Set the created_at value to the current timestamp
-        })
-        .returning("*");
-      return newFavorite[0];
+      // Check if the recipeId exists in the favorites table
+      const favorite = await this.db("favorites")
+        .where("user_id", userId)
+        .where("recipe_id", recipeId)
+        .first();
+
+      if (favorite) {
+        console.log(
+          `Recipe with ID: ${recipeId} is already in favorites for user with ID: ${userId}`
+        );
+      } else {
+        // The userId and recipeId are not found in favorites, so add them
+        const newFavorite = await this.db("favorites")
+          .insert({
+            user_id: userId,
+            recipe_id: recipeId,
+            created_at: new Date().toISOString(), // Set the created_at value to the current timestamp
+          })
+          .returning("*");
+
+        if (newFavorite.length > 0) {
+          console.log(
+            `Added recipe with ID: ${recipeId} to favorites for user with ID: ${userId}`
+          );
+          return newFavorite[0];
+        } else {
+          throw new Error(
+            `Failed to add recipe with ID: ${recipeId} to favorites for user with ID: ${userId}`
+          );
+        }
+      }
     } catch (error) {
-      throw new Error("Error favoriting recipe: " + error.message);
+      console.error("Error adding recipe to favorites:", error);
+      return null;
     }
   }
 
-  //unfavorite recipe
+  // unfavorite recipe
   async unfavorite(userId, recipeId) {
     try {
-      const deletedFavorite = await this.knex("favorites")
-        .where({ user_id: userId, recipe_id: recipeId })
-        .delete()
-        .returning("*");
-      return deletedFavorite[0];
+      // Check if the recipeId exists in the favorites table
+      const favorite = await this.db("favorites")
+        .where("user_id", userId)
+        .where("recipe_id", recipeId)
+        .first();
+
+      if (favorite) {
+        // The userId and recipeId are found in favorites, so delete it
+        const deletedFavorite = await this.db("favorites")
+          .where("user_id", userId)
+          .where("recipe_id", recipeId)
+          .delete()
+          .returning("*");
+        console.log(`Removed recipe with ID: ${recipeId} from favorites`);
+        return favorite;
+      } else {
+        console.log(
+          `Recipe with ID: ${recipeId} is not in favorites for user with ID: ${userId}`
+        );
+      }
     } catch (error) {
-      throw new Error("Error unfavoriting recipe: " + error.message);
+      console.error("Error removing recipe from favorites:", error);
     }
   }
 }

@@ -64,33 +64,7 @@
     {{{body}}}
     <section>
       <h1>Recipes</h1>
-      <div class="row">
-        {{#each recipes}}
-          <div class="col-sm-4">
-            <div class="slender-card">
-              <div class="card-body" onclick="recipeClick({{this.recipe_id}})">
-                <h5 class="card-title">Title:</h5>
-                <p class="card-text">{{this.title}}</p>
-                <h5 class="card-title">Type:</h5>
-                <p class="card-text">{{this.type}}</p>
-                <h5 class="card-title">Cuisine:</h5>
-                <p class="card-text">{{this.Cuisine}}</p>
-                <h5 class="card-title">Servings:</h5>
-                <p class="card-text">{{this.servings}}</p>
-                <h5 class="card-title">Added By:</h5>
-                <p class="card-text">{{this.user_id}}</p>
-              </div>
-              <button
-                type="button"
-                class="btn btn-outline-secondary heart-button"
-                data-recipe-id="{{this.recipe_id}}"
-              >
-                <i class="far fa-heart heart-icon"></i>
-              </button>
-            </div>
-          </div>
-        {{/each}}
-      </div>
+      <p>{{message}}</p>
     </section>
     <script src="/js/recipeClient.js"></script>
     <script

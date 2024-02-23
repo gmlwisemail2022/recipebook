@@ -77,9 +77,14 @@
   }
 
   .col-sm-4 {
-    flex: 0 0 33.33%;
-    max-width: 33.33%;
+    flex: 0 0 30%;
+    max-width: 30%;
     padding-right: 15px;
     padding-left: 15px;
   }
+}
+
+/*  for recipe details */
+.bigger-font {
+  font-size: 25px;
 }

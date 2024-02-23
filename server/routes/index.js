@@ -29,7 +29,19 @@ const recipeController = require("../controller/recipe.js");
 
 // list all the recipes via url http://localhost:3000/recipe/list
 router.get("/recipe", recipeController.listAll.bind(recipeController));
+
+//list all the recipes via filter via url http://localhost:3000/recipe/:param
+
+router.get("/recipe/:param", recipeController.listAll.bind(recipeController));
+
+//list recipe details via recipeId via url http://localhost:3000/recipe/:recipeId
+router.get(
+  "/recipe/details/:recipeId",
+  recipeController.listDetail.bind(recipeController)
+);
+
 // lets user see the list of added recipe (don't include recipe from other users) via url http://localhost:3000/recipe/list/:userId
+
 router.get(
   "/recipe/list/:userId",
   recipeController.listAdded.bind(recipeController)
@@ -53,11 +65,16 @@ router.delete(
 );
 
 // all routes above are tested ok via postman (except for: http://localhost:3000/recipe/list/:userId)
-/*
-// may not to be routed via url instead use a button and directly update the database when a button is clicked on the front end
-router.post("/favorite/:id", recipeService.favorite.bind(recipeService));
-router.post("/unfavorite/:id", recipeService.unfavorite.bind(recipeService));
-*/
+// lets user favorite a recipe
+router.post(
+  "/favorites/:userId/:recipeId",
+  recipeController.favorite.bind(recipeController)
+);
+// lets user unfavorite a recipe
+router.delete(
+  "/favorites/:userId/:recipeId",
+  recipeController.unfavorite.bind(recipeController)
+);
 
 // Export the router to be used in the app.js file
 module.exports = router;

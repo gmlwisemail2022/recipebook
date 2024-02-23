@@ -1,0 +1,67 @@
+<html lang="en">
+  <head>
+    <!-- Head section remains the same -->
+    <link rel="stylesheet" href="/css/recipe.css" />
+    <!-- Link to Font Awesome CDN -->
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
+    />
+    <!-- Link to Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/5.4.0/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <header>
+      <!-- Header section remains the same -->
+      ...
+    </header>
+    <nav class="navigation-bar">
+      <!-- Navigation section remains the same -->
+      ...
+    </nav>
+    <section>
+      <h1>{{recipe.title}}</h1>
+      <div class="recipe-details">
+        <div class="recipe-info">
+          <h5>Meal Type:</h5>
+          <p>{{recipe.meal_type}}</p>
+        </div>
+        <div class="recipe-info">
+          <h5>Cuisine:</h5>
+          <p>{{recipe.cuisine}}</p>
+        </div>
+        <div class="recipe-info">
+          <h5>Servings:</h5>
+          <p>{{recipe.servings}}</p>
+        </div>
+      </div>
+      <div class="recipe-ingredients">
+        <h2>Ingredients</h2>
+        <ul>
+          {{#each recipe.ingredients}}
+            <li>{{this}}</li>
+          {{/each}}
+        </ul>
+      </div>
+      <div class="recipe-instructions">
+        <h2>Instructions</h2>
+        <ol>
+          {{#each recipe.instructions}}
+            <li>{{this}}</li>
+          {{/each}}
+        </ol>
+      </div>
+      <a
+        href="javascript:history.back()"
+        class="btn btn-primary bigger-font"
+      >Back</a>
+    </section>
+    <script src="/js/recipeClient.js"></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/5.4.0/js/bootstrap.bundle.min.js"
+    ></script>
+  </body>
+</html>

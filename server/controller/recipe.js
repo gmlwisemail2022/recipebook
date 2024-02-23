@@ -8,21 +8,81 @@ const app = require("../config/app");
 class RecipeController {
   // this represents the req and res objects from the server
   // the server receives the req and sends the res
+
+  // list all recipe depending on the param filters
   async listAll(req, res) {
+    const { param } = req.params;
+    console.log("req.parms", req.params);
+    let recipeList;
+
+    // checks whether there is param or not
+    switch (true) {
+      case !param: // if not param, get all recipes
+        // No parameter provided, list all recipes
+        recipeList = await recipeService.listAll();
+        break;
+
+      case param === "List_All": // if param is List_All, get all recipes
+        // No parameter provided, list all recipes
+        recipeList = await recipeService.listAll();
+        break;
+
+      case isMealType(param): // if param is a valid meal type, get all recipes by meal type
+        console.log("obtained param", param);
+        // Parameter matches a meal type (isMealType function contains valid meal types)
+        recipeList = await recipeService.listMeal(param);
+        break;
+
+      case isCuisine(param): // if param is a valid cuisine, get all recipes by cuisine
+        console.log("obtained param", param);
+        // Parameter matches a cuisine (isCuisine function contains valid cuisines)
+        recipeList = await recipeService.listCuisine(param);
+        break;
+
+      default:
+        console.log("invalid param", param);
+        // Invalid parameter, handle error or redirect to a default page
+        return res.status(400).json({ error: "Invalid parameter" });
+    }
+
     try {
-      const recipeList = await recipeService.listAll();
-      //res.json(recipeList);
-      //res.redirect("/recipe"); // Redirect to the "/recipe" page
-      res.render("recipe", { recipes: recipeList });
+      if (recipeList.length === 0) {
+        const message = `No recipe to show for ${param}`;
+        res.render("empty-recipe", { message });
+      } else {
+        console.log("new recipe total from filter", recipeList.length);
+        res.render("recipe", { recipes: recipeList });
+      }
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
   }
 
+  // list the details of a recipe
+  async listDetail(req, res) {
+    const { recipeId } = req.params;
+    console.log("req.parms recipeId", req.params);
+    try {
+      const recipeDetail = await recipeService.listDetail(recipeId);
+      console.log("recipe details are:", recipeDetail.length);
+      // Split ingredients by comma
+      recipeDetail[0].ingredients = recipeDetail[0].ingredients.split(",");
+
+      // Split instructions by period
+      recipeDetail[0].instructions = recipeDetail[0].instructions.split(".");
+
+      res.render("recipe-detail", { recipe: recipeDetail[0] });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+
+  // list the details user added recipe
+
   async listAdded(req, res) {
     try {
       const recipeList = await recipeService.listAdded();
-      res.json(recipeList);
+      res.render("recipe-detail", { recipe: recipeList });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -78,6 +138,56 @@ class RecipeController {
       res.status(500).json({ error: error.message });
     }
   }
+
+  async favorite(req, res) {
+    try {
+      const { userId, recipeId } = req.params;
+      await recipeService.favorite(userId, recipeId);
+      res.status(201).json("favorite added!");
+    } catch (error) {
+      res.status(500).json({ error: "Favorite not updated!" });
+    }
+  }
+
+  async unfavorite(req, res) {
+    try {
+      const { userId, recipeId } = req.params;
+      await recipeService.unfavorite(userId, recipeId);
+      res.status(201).json("favorite removed!");
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+}
+
+// server side functions listed here:
+
+// navigation related functions:
+//Note: if there would be additional meal types/ cuisine inserted on the navbar dropdown, please add them here:
+
+//function to check if the parameter is a valid meal type
+function isMealType(param) {
+  console.log("checking cuisine where param is", param);
+  const validMealTypes = [
+    "Appetizers",
+    "Entrees",
+    "Sides",
+    "Desserts",
+    "Drinks",
+  ];
+  return validMealTypes.includes(param);
+}
+//function to check if the parameter is a valid cuisine
+function isCuisine(param) {
+  console.log("checking cuisine where param is", param);
+  const validCuisines = [
+    "Western",
+    "European",
+    "Asian",
+    "Mediterranean",
+    "African",
+  ];
+  return validCuisines.includes(param);
 }
 
 module.exports = new RecipeController();

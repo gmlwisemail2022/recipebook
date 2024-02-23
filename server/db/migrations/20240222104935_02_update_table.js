@@ -7,7 +7,7 @@ exports.up = function (knex) {
   return (
     knex.schema
       .createTable("users", (table) => {
-        table.increments("user_id").primary();
+        table.increments("user_id").primary().unsigned();
         table.string("username", 20).notNullable().unique();
         table.string("password").notNullable();
         table.string("email").notNullable().unique();
@@ -19,7 +19,7 @@ exports.up = function (knex) {
       // create promises - one table at a time
       .then(() => {
         return knex.schema.createTable("recipes", (table) => {
-          table.increments("recipe_id").primary();
+          table.increments("recipe_id").primary().unsigned();
           table.string("title").notNullable();
           table.string("meal_type").notNullable();
           table.string("cuisine").notNullable();
@@ -33,7 +33,7 @@ exports.up = function (knex) {
       })
       .then(() => {
         return knex.schema.createTable("favorites", (table) => {
-          table.increments("favorite_id").primary();
+          table.increments("favorite_id").primary().unsigned();
           table.timestamp("created_at").defaultTo(knex.fn.now());
           table.integer("user_id").references("users.user_id");
           table.integer("recipe_id").references("recipes.recipe_id");
