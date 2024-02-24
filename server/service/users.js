@@ -18,6 +18,11 @@ class UserService {
         const user = await userDAO.getUser(username);
         return user;
     }
+    async getUserByEmail(email) {
+        // calls the getUserByEmail method from the userDAO
+        const user = await userDAO.getUserByEmail(email);
+        return user;
+    }
     async updatePassword(username, password) {
         // calls the updatePassword method from the userDAO
         await userDAO.updatePassword(username, password);

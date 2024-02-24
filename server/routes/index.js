@@ -10,6 +10,8 @@ const router = express.Router();
 router.post("/register", userController.createUser);
 // Read a user in the browser. Make sure to use the correct URL: http://localhost:3000/user/:username
 router.get("/user/:username", userController.getUser);
+// Read a user in the browser. Make sure to use the correct URL: http://localhost:3000/user/:email
+router.get("/user/email/:email", userController.getUserByEmail);
 // Update a user's password, in the browser. Make sure to use the correct URL: http://localhost:3000/user/:username
 router.put("/user/updatePassword/:username", userController.updatePassword);
 // Update a user's email, in the browser. Make sure to use the correct URL: http://localhost:3000/user/:username

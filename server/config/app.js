@@ -3,7 +3,7 @@ const express = require('express');
 // routes for CRUD operations
 const router = require('../routes/index.js');
 // routes for authentication
-const authRoutes = require('../routes/auth_routes.js');
+// const authRoutes = require('../routes/auth_routes.js');
 // handlebars package
 const {engine} = require('express-handlebars');
 // app
@@ -27,9 +27,9 @@ app.set('view engine', 'hbs');
 app.use(router);
 
 
-// ROUTES - Authentication
-// when using the authRoutes, it will begin at /auth level
-app.use('/auth', authRoutes);
+// // ROUTES - Authentication
+// // when using the authRoutes, it will begin at /auth level
+// app.use('/auth', authRoutes);
 
 // ROUTES
 // Home

@@ -31,6 +31,16 @@ class UserDAO {
             .first();
         return user;
     }
+    // Function to get a user by their email
+    async getUserByEmail(email) {
+        const user = await db('users')
+        // filters results based on the email parameter
+        // PSQL equivalent: SELECT * FROM users WHERE email = email
+            .where({email})
+            // returns the first result in the query
+            .first();
+        return user;
+    }
     // Function to update a user's password
     async updatePassword(username, password) {
         await db('users')

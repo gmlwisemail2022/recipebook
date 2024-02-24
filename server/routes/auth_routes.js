@@ -1,63 +1,75 @@
-const passport = require('passport');
-const router = require('express').Router();
-const session = require('express-session');
-router.use(session({ secret: 'anything' }));
-router.use(passport.initialize());
-router.use(passport.session());
+// const passport = require('passport');
+// const router = require('express').Router();
+// const session = require('express-session');
+// router.use(session({ 
+//     secret: 'anything',
+//     resave: true,
+//     saveUninitialized: true}));
+// router.use(passport.initialize());
+// router.use(passport.session());
 
 
-require('../config/passport_setup.js');
 
-function isLoggedIn(req, res, next) {
-    req.user ? next() : res.render('failure.hbs');
-}
+// require('../config/passport_setup.js');
 
-function notLoggedIn(req, res, next) {
-    req.user ? res.render('failure.hbs') : next();
-}
+// // function isLoggedIn(req, res, next) {
+// //     req.user ? next() : res.render('failure.hbs');
+// // }
 
-// auth logout
-router.get('/logout', (req, res) => {
-    // handle with passport
-    res.send('logging out');
-});
+// // function notLoggedIn(req, res, next) {
+// //     req.user ? res.render('failure.hbs') : next();
+// // }
 
-// auth with google
-router.get('/google',
-    passport.authenticate('google', {
-        scope: ['email', 'profile']
-    })
-);
-
-// callback route for google to redirect to
-router.get('/google/callback', passport.authenticate('google', {
-        successRedirect: '/',
-        failureRedirect: '/failure'
-    })
-);
-
-// auth with local
-router.post('/login', passport.authenticate('local-login', {
-    successRedirect: '/',
-    failureRedirect: '/failure'
-}));
-
-router.get('/login', notLoggedIn, (req, res) => {
-    res.render('login.hbs');
-});
-
-router.get('/failure', (req, res) => {
-    res.render('failure.hbs');
-});
-
-// router.get('/protected', isLoggedIn, (req, res) => {
-//     res.send('you are logged in, this is your profile - ' + req.user.displayName);
+// // auth logout
+// router.get('/logout', (req, res) => {
+//     // handle with passport
+//     res.send('logging out');
 // });
 
-router.get('/logout', (req, res) => {
-    req.logout();
-    req.session = null;
-    res.send('you are logged out');
-});
+// // auth with google
+// router.get('/google',
+//     passport.authenticate('google', {
+//         scope: ['email', 'profile']
+//     })
+// );
 
-module.exports = router;
+// // callback route for google to redirect to
+// router.get('/google/callback', passport.authenticate('google', {
+//         successRedirect: '/',
+//         failureRedirect: '/failure'
+//     })
+// );
+
+// // auth with local
+// router.post('/login', passport.authenticate('local-login', {
+//         successRedirect: '/',
+//         failureRedirect: '/auth/failure'
+//     })
+//     // (req, res) => {
+//     //     res.send('Hi there!');
+//     // }
+// );
+// // router.post('/login', passport.authenticate('local-login', {
+// //     successRedirect: '/',
+// //     failureRedirect: '/auth/failure'
+// // }));
+
+// router.get('/login', (req, res) => {
+//     res.render('login.hbs');
+// });
+
+// router.get('/failure', (req, res) => {
+//     res.render('failure.hbs');
+// });
+
+// // router.get('/protected', isLoggedIn, (req, res) => {
+// //     res.send('you are logged in, this is your profile - ' + req.user.displayName);
+// // });
+
+// router.get('/logout', (req, res) => {
+//     req.logout();
+//     req.session = null;
+//     res.send('you are logged out');
+// });
+
+// module.exports = router;

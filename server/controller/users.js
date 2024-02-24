@@ -30,6 +30,18 @@ class UserController {
             res.status(500).json({error: error.message});
         }
     }
+    async getUserByEmail(req, res) {
+        try {
+            // the req is the parameter email from the client
+            const email = req.params.email;
+            // calls the getUserByEmail method from the user service
+            const user = await userService.getUserByEmail(email);
+            // if the status is 200, json will return the user object
+            // res.status(200).json(user);
+        } catch (error) {
+            // res.status(500).json({error: error.message});
+        }
+    }
     async updatePassword(req, res) {
         try {
             // the req is the parameter username from the client
