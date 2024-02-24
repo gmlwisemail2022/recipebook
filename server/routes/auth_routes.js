@@ -50,9 +50,9 @@ router.get('/failure', (req, res) => {
     res.render('failure.hbs');
 });
 
-router.get('/protected', isLoggedIn, (req, res) => {
-    res.send('you are logged in, this is your profile - ' + req.user.displayName);
-});
+// router.get('/protected', isLoggedIn, (req, res) => {
+//     res.send('you are logged in, this is your profile - ' + req.user.displayName);
+// });
 
 router.get('/logout', (req, res) => {
     req.logout();

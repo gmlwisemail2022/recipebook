@@ -4,11 +4,11 @@ const session = require('express-session');
 router.use(session({ secret: 'anything' }));
 router.use(passport.initialize());
 router.use(passport.session());
-const GoogleStrategy = require('passport-google-oauth2').Strategy;
 const dotenv = require('dotenv');
-const knex = require('knex');
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcrypt');
+const GoogleStrategy = require('passport-google-oauth2').Strategy;
+const knex = require('knex');
 dotenv.config({path: '../.env'});
 
 // passport.use() is a function that takes a new instance of a strategy as its first argument
@@ -20,7 +20,7 @@ passport.use(
     callbackURL: 'https://localhost:3000/auth/google/callback',
     // passReqToCallback: true
     }, 
-    async (request, accessToken, refreshToken, profile, done) => {
+    async (accessToken, refreshToken, profile, done) => {
         const user = await knex('users').where({googleId: profile.id});
         if (profile) {
             return done(null, user);
@@ -59,7 +59,7 @@ passport.use(
             passReqToCallback: true,
         },
         async (request, email, password, done) => {
-            const user = await knex('users').where({email: email});
+            const user = await knex('users').where({email: email}).first();
             if (user) {
                 const result = await bcrypt.compare(password, user.password);
                 return result ? done(null, user) : done(null, false);
