@@ -140,7 +140,8 @@ class UserController {
             const user = await userService.getUserByEmail(email);
             res.status(200).json(user);
         } catch (error) {
-            res.status(500).json({error: error.message});
+            console.log('error in the controller');
+            // res.status(500).json({error: error.message});
         }
     }
 

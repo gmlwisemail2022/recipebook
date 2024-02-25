@@ -37,9 +37,9 @@ app.get('/', (req, res) => {
     res.render('home.hbs')
 });
 
-app.get('/auth/login', (req, res) => {
-    res.render('login.hbs')
-});
+// app.get('/auth/login', (req, res) => {
+//     res.render('login.hbs')
+// });
 
 app.get('/register', (req, res) => {
     res.render('register.hbs')

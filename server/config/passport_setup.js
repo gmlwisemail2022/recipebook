@@ -9,8 +9,7 @@ const dotenv = require('dotenv');
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcrypt');
 const GoogleStrategy = require('passport-google-oauth2').Strategy;
-const knexConfig = require("../db/knexfile.js")["development"];
-const knex = require("knex")(knexConfig);
+const db = require('../db/db.js');
 const userController = require("../controller/users.js");
 dotenv.config({ path: '../.env' });
 
@@ -75,7 +74,7 @@ passport.use(
         },
         async (email, password, done) => {
             try {
-                const user = await userController.getUserByEmail(email);
+                const user = await db("users").where({ email: email }).first();
                 if (!user) {
                     return done(null, false, { message: "Incorrect email." });
                 }
@@ -84,7 +83,7 @@ passport.use(
                 }
                 return done(null, user);
             } catch (error) {
-                done(error);
+                return res.status(302).json({redirect: '/'});
             }
         }
     ));
