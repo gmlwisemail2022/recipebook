@@ -172,6 +172,7 @@ class RecipeService {
   //favorite a recipe
   async favorite(userId, recipeId) {
     try {
+      /*no need to check since it is checked already in controller
       // Check if the recipeId exists in the favorites table
       const favorite = await this.db("favorites")
         .where("user_id", userId)
@@ -191,18 +192,26 @@ class RecipeService {
             created_at: new Date().toISOString(), // Set the created_at value to the current timestamp
           })
           .returning("*");
-
-        if (newFavorite.length > 0) {
-          console.log(
-            `Added recipe with ID: ${recipeId} to favorites for user with ID: ${userId}`
-          );
-          return newFavorite[0];
-        } else {
-          throw new Error(
-            `Failed to add recipe with ID: ${recipeId} to favorites for user with ID: ${userId}`
-          );
-        }
+*/
+      const newFavorite = await this.db("favorites")
+        .insert({
+          user_id: userId,
+          recipe_id: recipeId,
+          created_at: new Date().toISOString(), // Set the created_at value to the current timestamp
+        })
+        .returning("*");
+      console.log("new favorite created");
+      if (newFavorite.length > 0) {
+        console.log(
+          `Added recipe with ID: ${recipeId} to favorites for user with ID: ${userId}`
+        );
+        return newFavorite[0];
+      } else {
+        throw new Error(
+          `Failed to add recipe with ID: ${recipeId} to favorites for user with ID: ${userId}`
+        );
       }
+      //}
     } catch (error) {
       console.error("Error adding recipe to favorites:", error);
       return null;
@@ -234,6 +243,32 @@ class RecipeService {
       }
     } catch (error) {
       console.error("Error removing recipe from favorites:", error);
+    }
+  }
+  // get all the favorites of a specific user
+  async getFavorites(userId) {
+    console.log("getting favorites - userId", userId);
+    try {
+      // Retrieve favorites of the user from the database
+      const favorites = await this.db("favorites").where("user_id", userId);
+      console.log("favorites accessed from db", favorites);
+      return favorites;
+    } catch (error) {
+      throw new Error(`Error fetching favorites: ${error.message}`);
+    }
+  }
+
+  async checkFavorites(userId, recipeId) {
+    console.log("checking favorites");
+    try {
+      const favorite = await this.db("favorites")
+        .where("user_id", userId)
+        .where("recipe_id", recipeId)
+        .first();
+
+      return !!favorite; // Return true if favorite exists, false otherwise
+    } catch (error) {
+      throw new Error(`Error checking favorites: ${error.message}`);
     }
   }
 }
