@@ -2,6 +2,7 @@
 
 // -= All event listeners =-
 
+// ------------- event listeners for recipe.hbs: -----------------------
 // Favorites (Heart button)
 const heartButtons = document.querySelectorAll(".heart-button"); // Get all heart buttons
 
@@ -9,14 +10,37 @@ const heartButtons = document.querySelectorAll(".heart-button"); // Get all hear
 heartButtons.forEach((button) => {
   button.addEventListener("click", function () {
     const recipeId = this.getAttribute("data-recipe-id");
+    var userId = getCookie("userId"); // Get the user ID from cookie
     console.log("recipeId", recipeId);
-    toggleFavorite(recipeId);
+    // check if a user is logged in
+    userId = 3; // Temporary user id to bypass cookie
+    if (!userId) {
+      // If user ID is not found, redirect to the register page
+      window.location.href = "/register";
+      return; // Stop further execution
+    }
+
+    toggleFavorite(userId, recipeId);
   });
 });
 
+// -------------- event listeners for dashboard.hbs: ---------------------
 // Attach event listener to the form submission
 const form = document.getElementById("recipeForm");
 form.addEventListener("submit", submitForm);
+
+// Add an event listener to the delete button
+document.addEventListener("DOMContentLoaded", () => {
+  const deleteButtons = document.querySelectorAll(".btn-delete");
+  deleteButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const userId = getCookie("userId"); // Get the user ID from cookie
+      //const userId = 3; // Temporary user id
+      const recipeId = button.getAttribute("data-recipe-id");
+      deleteRecipe(userId, recipeId);
+    });
+  });
+});
 
 // all the front-end recipe functions listed below:
 // function to filter the recipes by a specific cuisine
@@ -74,29 +98,25 @@ async function dashboardClick(userId) {
 }
 
 // Function to toggle favorite
-async function toggleFavorite(recipeId) {
-  console.log("checking favorite");
-
-  const button = document.querySelector(
-    `.heart-button[data-recipe-id="${recipeId}"]`
-  );
-  const icon = button.querySelector(".heart-icon");
-  const isFavorite = icon.classList.contains("fas");
-  const userId = 3; //temporary hardcoded userid
-  if (isFavorite) {
-    // Remove from favorites
-    console.log("removing favorite");
-    removeFromFavorites(userId, recipeId);
-    icon.classList.remove("fas");
-    icon.classList.add("far");
-    icon.style.color = ""; // Reset color to default
-  } else {
-    // Add to favorites
-    console.log("adding favorite");
-    addToFavorites(userId, recipeId);
-    icon.classList.remove("far");
-    icon.classList.add("fas");
-    icon.style.color = "red";
+async function toggleFavorite(userId, recipeId) {
+  console.log("checking favorite - user/ recipeId", userId, "/", recipeId);
+  try {
+    const response = await fetch(`/favorites/${userId}/${recipeId}`, {
+      method: "POST",
+    });
+    if (response.ok) {
+      console.log("Toggled favorite for recipe ID:", recipeId);
+      const icon = document.querySelector(
+        `.heart-button[data-recipe-id="${recipeId}"] .heart-icon`
+      );
+      icon.classList.toggle("fas", !icon.classList.contains("fas")); // Toggle red color
+      //icon.classList.toggle("far");
+      // Optionally, change the color or style here
+    } else {
+      console.error("Failed to toggle favorite for recipe ID:", recipeId);
+    }
+  } catch (error) {
+    console.error("Error toggling favorite:", error);
   }
 }
 
@@ -128,6 +148,7 @@ async function removeFromFavorites(userId, recipeId) {
 
 // all front-end dashboard related functions below:
 
+// function to submit form (for add and edit)
 async function submitForm(event) {
   event.preventDefault(); // Prevent default form submission behavior
 
@@ -152,7 +173,14 @@ async function submitForm(event) {
 
   console.log("Form data:", recipeData);
 
-  const userId = 3; // Temporary user id
+  const userId = getCookie("userId"); // Get the user ID from cookie
+  userId = 3; // Temporary user id to bypass cookie
+  if (!userId) {
+    // If user ID is not found, redirect to the register page
+    window.location.href = "/register";
+    return; // Stop further execution
+  }
+
   try {
     const response = await fetch(`/dashboard/submit/${userId}`, {
       method: "POST",
@@ -161,10 +189,44 @@ async function submitForm(event) {
       },
       body: JSON.stringify(recipeData),
     });
-    console.log("Form submitted successfully");
-    // Handle the response as needed
+    if (response.ok) {
+      console.log("Form submitted successfully");
+      // Optionally, handle success response
+    } else {
+      console.error("Failed to submit form");
+      // Optionally, handle failed response
+    }
   } catch (error) {
     console.error("Error submitting form:", error);
     // Handle any errors that occurred during the form submission
   }
+}
+
+// function to delete the recipe
+async function deleteRecipe(userId, recipeId) {
+  //const userId = 3; // Temporary user id
+  try {
+    const response = await fetch(`/dashboard/${userId}/delete/${recipeId}`, {
+      method: "DELETE",
+    });
+    console.log("Delete recipe with ID:", recipeId);
+    if (response.status === 200) {
+      const data = await response.json();
+      const redirectUrl = data.redirect;
+      window.location.href = redirectUrl;
+    }
+  } catch (error) {
+    console.error("Error adding recipe to favorites:", error);
+  }
+}
+
+// Function to get cookie value by name
+function getCookie(name) {
+  const cookies = document.cookie.split(";").map((cookie) => cookie.trim());
+  for (const cookie of cookies) {
+    if (cookie.startsWith(name + "=")) {
+      return cookie.substring(name.length + 1);
+    }
+  }
+  return null;
 }

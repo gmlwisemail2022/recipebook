@@ -63,7 +63,7 @@
 .slender-card {
   margin-bottom: 20px;
   padding: 10px;
-  background-color: #fff;
+  background-color: #dde2e4;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border-radius: 5px;
 }
@@ -82,6 +82,10 @@
     padding-right: 15px;
     padding-left: 15px;
   }
+}
+
+.heart-icon.fas {
+  color: red;
 }
 
 /*  for recipe details */

@@ -26,11 +26,11 @@
             <a href="javascript:void(0)" class="dropbtn">Meals</a>
             <div class="dropdown-content">
               <a href="#" onclick="filterByParam('List_All')">All Meals</a>
-              <a href="#" onclick="filterByParam('Appetizers')">Appetizers</a>
-              <a href="#" onclick="filterByParam('Entrees')">Entrees</a>
-              <a href="#" onclick="filterByParam('Sides')">Sides</a>
-              <a href="#" onclick="filterByParam('Desserts')">Desserts</a>
-              <a href="#" onclick="filterByParam('Drinks')">Drinks</a>
+              <a href="#" onclick="filterByParam('appetizer')">Appetizers</a>
+              <a href="#" onclick="filterByParam('entree')">Entrees</a>
+              <a href="#" onclick="filterByParam('side')">Sides</a>
+              <a href="#" onclick="filterByParam('dessert')">Desserts</a>
+              <a href="#" onclick="filterByParam('drinks')">Drinks</a>
             </div>
           </li>
           <li class="dropdown">
@@ -70,10 +70,10 @@
       <h1>Recipes</h1>
       <div class="row">
         {{#each recipes}}
-          <div class="col-sm-4">
+           <div class="col-sm-4">
             <div class="slender-card">
               <div class="card-body" onclick="recipeClick({{this.recipe_id}})">
-                <h5 class="card-title">Title:</h5>
+                <h5 class="card-title">Recipe Name:</h5>
                 <p class="card-text">{{this.title}}</p>
                 <h5 class="card-title">Type:</h5>
                 <p class="card-text">{{this.meal_type}}</p>
@@ -88,11 +88,12 @@
                 type="button"
                 class="btn btn-outline-secondary heart-button"
                 data-recipe-id="{{this.recipe_id}}"
+                  data-user-id="{{userId}}"
               >
                 <i class="far fa-heart heart-icon"></i>
               </button>
             </div>
-          </div>
+          </div> 
         {{/each}}
       </div>
     </section>
