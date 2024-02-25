@@ -7,7 +7,7 @@ authRouter.use(session({
     resave: true,
     saveUninitialized: true
 }));
-const db = require('../db/db.js');
+const db = ('../db/db.js');
 authRouter.use(passport.initialize());
 authRouter.use(passport.session());
 
@@ -57,9 +57,20 @@ authRouter.get('/login', (req, res) => {
     res.render('login.hbs');
 });
 
+authRouter.get('/failure', (req, res) => {
+    console.log('GET /failure');
+    res.render('failure.hbs', { message: 'Login failed' });
+});
+
+authRouter.get('/success', (req, res) => {
+    console.log('GET /success');
+    res.render('success.hbs', { message: 'Login successful' });
+    
+});
+
 authRouter.post('/login', passport.authenticate('local', {
-    successRedirect: '/', successMessage: true,
-    failureRedirect: '/auth/login', failureMessage: true
+    successRedirect: '/success', successMessage: true,
+    failureRedirect: '/auth/failure', failureMessage: true
 }));
 
 module.exports = authRouter;

@@ -78,10 +78,10 @@ router.post(
   recipeController.favorite.bind(recipeController)
 );
 // lets user unfavorite a recipe
-router.delete(
-  "/favorites/:userId/:recipeId",
-  recipeController.unfavorite.bind(recipeController)
-);
+// router.delete(
+//   "/favorites/:userId/:recipeId",
+//   recipeController.unfavorite.bind(recipeController)
+// );
 
 // Export the router to be used in the app.js file
 module.exports = router;
