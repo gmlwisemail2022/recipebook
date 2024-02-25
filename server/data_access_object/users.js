@@ -83,6 +83,27 @@ class UserDAO {
             .where({username})
             .del();
     }
+    // login user POST request
+    async loginUser(username, password) {
+        const user = await db('users')
+            .where('username', username)
+            .first();
+        if (!user) {
+            throw new Error('Incorrect username.');
+        }
+        const passwordMatch = await bcrypt.compare(password, user.password);
+        if (!passwordMatch) {
+            throw new Error('Incorrect password.');
+        }
+        return user;
+    }
+    // get user by email
+    async getUserByEmail(email) {
+        const user = await db('users')
+            .where('email', email)
+            .first();
+        return user;
+    }
 }
 
 module.exports = new UserDAO;

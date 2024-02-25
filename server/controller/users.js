@@ -118,6 +118,32 @@ class UserController {
             res.status(500).json({error: error.message});
         }
     }
+    // login user POST request
+    async loginUser(req, res) {
+        try {
+            // the req is the parameter username from the client
+            const username = req.params.username;
+            // the req is the parameter password from the client
+            const password = req.body.password;
+            // calls the loginUser method from the user service
+            const user = await userService.loginUser(username, password);
+            res.status(200).json(user);
+        } catch (error) {
+            res.status(500).json({error: error.message});
+        }
+    }
+    async getUserByEmail(req, res) {
+        try {
+            // the req is the parameter email from the client
+            const email = req.params.email;
+            // calls the getUserByEmail method from the user service
+            const user = await userService.getUserByEmail(email);
+            res.status(200).json(user);
+        } catch (error) {
+            res.status(500).json({error: error.message});
+        }
+    }
+
 }
 
 module.exports = new UserController;

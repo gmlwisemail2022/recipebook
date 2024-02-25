@@ -47,6 +47,16 @@ class UserService {
         // calls the deleteUser method from the userDAO
         await userDAO.deleteUser(username);
     }
+    async loginUser(username, password) {
+        // calls the loginUser method from the userDAO
+        const user = await userDAO.loginUser(username, password);
+        return user;
+    }
+    async getUserByEmail(email) {
+        // calls the getUserByEmail method from the userDAO
+        const user = await userDAO.getUserByEmail(email);
+        return user;
+    }
 }
 
 module.exports = new UserService;
