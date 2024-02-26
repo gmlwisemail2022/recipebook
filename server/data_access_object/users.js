@@ -1,6 +1,7 @@
 // Purpose: Define the data access object for the users table in the database.
 // This file is used to interact with the database to perform CRUD operations on the users table.
 const db = require("../db/db.js");
+const bcrypt = require("bcrypt");
 
 class UserDAO {
     // Create a new user

@@ -1,84 +1,77 @@
 const passport = require('passport');
-const router = require('express').Router();
+const LocalStrategy = require('passport-local').Strategy;
+const authRouter = require('express').Router();
 const session = require('express-session');
-router.use(session({
+// const passport = require('../config/passport_setup.js');
+authRouter.use(session({
     secret: 'anything',
     resave: true,
     saveUninitialized: true
 }));
-router.use(passport.initialize());
-router.use(passport.session());
+const db = ('../db/db.js');
+authRouter.use(passport.initialize());
+authRouter.use(passport.session());
 
-
-
-require('../config/passport_setup.js');
-
-// function isLoggedIn(req, res, next) {
-//     req.user ? next() : res.render('failure.hbs');
-// }
-
-// function notLoggedIn(req, res, next) {
-//     req.user ? res.render('failure.hbs') : next();
-// }
-
-// auth logout
-router.get('/logout', (req, res) => {
-    // handle with passport
-    res.send('logging out');
-});
-
-// auth with google
-router.get('/google',
-    passport.authenticate('google', {
-        scope: ['email', 'profile']
+passport.use(
+    'local', // 'local' is the name of the strategy
+    new LocalStrategy((email, password, done) => {
+        console.log('LocalStrategy');
+        db('users')
+            .where({ email })
+            .first()
+            .then(user => {
+                console.log('User found');
+                if (!user) {
+                    console.log('Incorrect email');
+                    return done(null, false, { message: 'Incorrect email.' });
+                }
+                if (password !== user.password) {
+                    console.log('Incorrect password');
+                    return done(null, false, { message: 'Incorrect password.' });
+                }
+                console.log('Authentication successful');
+                return done(null, user);
+            })
+            .catch(err => {
+                console.log('Error:', err);
+                done(err);
+            });
     })
 );
 
-// callback route for google to redirect to
-router.get('/google/callback', passport.authenticate('google', {
-    successRedirect: '/',
-    failureRedirect: '/failure'
-})
-);
-
-// auth with local
-router.post('/login', (req, res, next) => {
-    passport.authenticate('local-login', (err, user, info) => {
-        if (err) {
-            return res.status(500).json({ error: err.message });
-        }
-        if (!user) {
-            return res.status(401).json({ message: info.message });
-        }
-        req.logIn(user, (err) => {
-            if (err) {
-                return res.status(500).json({ error: err.message });
-            }
-            return res.status(200).json(user);
-        });
-    })(req, res, next);
+passport.serializeUser((user, done) => {
+    console.log('serializeUser');
+    done(null, user.id);
 });
-// router.post('/login', passport.authenticate('local-login', {
-//     successRedirect: '/',
-//     failureRedirect: '/auth/failure'
-// }));
 
-router.get('/login', (req, res) => {
+passport.deserializeUser((id, done) => {
+    console.log('deserializeUser');
+    db('users')
+        .where({ id })
+        .first()
+        .then(user => done(null, user))
+        .catch(err => done(err, null));
+});
+
+authRouter.get('/login', (req, res) => {
+    console.log('GET /login');
     res.render('login.hbs');
 });
 
-router.get('/failure', (req, res) => {
-    res.render('failure.hbs');
+authRouter.get('/failure', (req, res) => {
+    console.log('GET /failure');
+    res.render('failure.hbs', { message: 'Login failed' });
 });
 
-// router.get('/protected', isLoggedIn, (req, res) => {
-//     res.send('you are logged in, this is your profile - ' + req.user.displayName);
-// });
-
-router.get('/logout', (req, res) => {
-    req.logout();
-    req.session = null;
-    res.send('you are logged out');
+authRouter.get('/success', (req, res) => {
+    console.log('GET /success');
+    res.render('success.hbs', { message: 'Login successful' });
+    
 });
 
-module.exports = router;
+authRouter.post('/login', passport.authenticate('local', {
+    successRedirect: '/recipe', successMessage: true,
+    failureRedirect: '/auth/failure', failureMessage: true
+}));
+
+module.exports = authRouter;

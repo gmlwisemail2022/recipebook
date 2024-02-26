@@ -1,36 +1,28 @@
+<!-- FILEPATH: /Users/dominicfrancis/repos/recipe_project/server/views/login.hbs -->
+
 <div class="container">
-    <div class="row justify-content-center">
+    <div class="row">
         <div class="col-md-6">
-            <div class="card mt-5">
-                <div class="card-header">
-                    <h3 class="text-center">Login</h3>
+            <h2>Local Login</h2>
+            <form action="/auth/login" method="POST">
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" class="form-control" required>
                 </div>
-                <div class="card-body">
-                    <form id="login_form" action="/auth/login" method="POST">
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" name="email" class="form-control" id="email" placeholder="Enter your email">
-                        </div>
-                        <div class="form-group">
-                            <label for="password">Password</label>
-                            <input type="password" name="password" class="form-control" id="password" placeholder="Enter your password">
-                        </div>
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-primary btn-block mt-2">Log in</button>
-                        </div>
-                        <div class="text-center">
-                            <p>Or log in with:</p>
-                            <a href="/auth/google"><button type="button" class="btn btn-danger" class="google-btn">Google</button></a>
-                        </div>
-                    </form>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" class="form-control" required>
                 </div>
-            </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <h2>Google Login</h2>
+            <form action="/auth/google" method="POST">
+                <button type="submit" class="btn btn-danger">Login with Google</button>
+            </form>
         </div>
     </div>
 </div>
-
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-
 
 
