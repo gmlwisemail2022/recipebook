@@ -23,13 +23,7 @@ heartButtons.forEach((button) => {
     toggleFavorite(userId, recipeId);
   });
 });
-/* no need helper
-//recipe default favorite icons:
-// Helper function to check if a recipe is in favorites
-Handlebars.registerHelper("isInFavorites", function (recipeId, favorites) {
-  return favorites.includes(recipeId) ? "text-danger" : ""; // Change color to red if present in favorites
-});
-*/
+
 // -------------- event listeners for dashboard.hbs: ---------------------
 // Attach event listener to the form submission
 const form = document.getElementById("recipeForm");
@@ -372,4 +366,15 @@ function populateEditForm(recipe) {
   document.getElementById("edit_servings").value = recipe[0].servings;
   document.getElementById("edit_ingredients").value = recipe[0].ingredients;
   document.getElementById("edit_instructions").value = recipe[0].instructions;
+}
+
+function clearForm() {
+  // Get all input fields in the form
+  var inputs = document.querySelectorAll(
+    "#recipeForm input, #recipeForm select, #recipeForm textarea"
+  );
+  // Loop through each input field and set its value to an empty string
+  inputs.forEach(function (input) {
+    input.value = "";
+  });
 }

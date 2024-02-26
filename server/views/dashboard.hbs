@@ -6,6 +6,8 @@
     <link rel="stylesheet" href="/js/bootstrap/bootstrap.min.css">
     <!-- Bootstrap CSS 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.4.0/css/bootstrap.min.css"> -->
+    <!-- Add Swiper CSS -->
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
   </head>
   <body>
     <header>
@@ -15,30 +17,8 @@
       <!-- Navigation section remains the same -->
     </nav>
     <section>
-      <!-- Recipe details section starts -->
-      <div class="row">
-        {{#each recipes}}
-          <div class="col-sm-3">
-            <div class="slender-card">
-              <div class="card-body" onclick="recipeClick({{this.recipe_id}})">
-                <h5 class="card-title">Title:</h5>
-                <p class="card-text">{{this.title}}</p>
-                <h5 class="card-title">Type:</h5>
-                <p class="card-text">{{this.meal_type}}</p>
-                <h5 class="card-title">Cuisine:</h5>
-                <p class="card-text">{{this.cuisine}}</p>
-              </div>
-              <button type="button" class="btn btn-primary btn-edit" data-recipe-id="{{this.recipe_id}}">Edit</button>
-              <!--<button type="button" class="btn btn-primary btn-delete" data-toggle="modal" data-target="#deleteModal" onclick="deleteRecipe({{this.user_id}},{{this.recipe_id}})">Delete</button> -->
-              <button type="button" class="btn btn-primary btn-delete" data-toggle="modal" data-target="#deleteModal" data-recipe-id="{{this.recipe_id}}">Delete</button>
-            </div>
-          </div>
-        {{/each}}
-      </div>
-      <!-- Recipe details section ends -->
-
-       <!-- Form section starts -->
-      <h2>Add/Edit Recipe</h2>
+            <!-- Form section starts -->
+      <h2>Add a new recipe</h2>
       <form id="recipeForm">
         <div class="form-group">
           <label for="title">Recipe Name:</label>
@@ -70,18 +50,46 @@
         </div>
         <div class="form-group">
           <label for="ingredients">Ingredients:</label>
-          <textarea id="ingredients" name="ingredients" rows="6" required>{{#each recipe.ingredients}}{{this}}{{/each}}</textarea>
+          <textarea id="ingredients" name="ingredients" rows="2" required>{{#each recipe.ingredients}}{{this}}{{/each}}</textarea>
         </div>
         <div class="form-group">
           <label for="instructions">Instructions:</label>
-          <textarea id="instructions" name="instructions" rows="8" required>{{#each recipe.instructions}}{{this}}{{/each}}</textarea>
+          <textarea id="instructions" name="instructions" rows="5" required>{{#each recipe.instructions}}{{this}}{{/each}}</textarea>
         </div>
         <div id="formButtons">
-          <button type="button" class="btn btn-primary" onclick="clearForm()">Add</button>
+          <button type="button" class="btn btn-primary" onclick="clearForm()">Clear</button>
           <button type="submit" class="btn btn-primary">Submit</button>
         </div>
       </form>
       <!-- Form section ends -->
+      <!-- Recipe details section starts -->
+  <!-- Initialize Swiper -->
+  <div class="swiper-container">
+    <div class="swiper-wrapper">
+      {{#each recipes}}
+      <div class="swiper-slide">
+        <div class="slender-card">
+          <div class="card-body" onclick="recipeClick({{this.recipe_id}})">
+            <h5 class="card-title">Title:</h5>
+            <p class="card-text">{{this.title}}</p>
+            <h5 class="card-title">Type:</h5>
+            <p class="card-text">{{this.meal_type}}</p>
+            <h5 class="card-title">Cuisine:</h5>
+            <p class="card-text">{{this.cuisine}}</p>
+          </div>
+          <button type="button" class="btn btn-primary btn-edit" data-recipe-id="{{this.recipe_id}}">Edit</button>
+          <button type="button" class="btn btn-primary btn-delete" data-toggle="modal" data-target="#deleteModal" data-recipe-id="{{this.recipe_id}}">Delete</button>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+    <!-- Add Pagination -->
+    <div class="swiper-pagination"></div>
+    <!-- Add Navigation Buttons -->
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+  </div>
+
     </section>
         <!-- Modal -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
@@ -163,5 +171,22 @@
     <!-- Bootstrap JavaScript
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.4.0/js/bootstrap.bundle.min.js"></script>  -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Add Swiper JS -->
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script>
+  var swiper = new Swiper('.swiper-container', {
+    slidesPerView: 6,
+    spaceBetween: 10,
+    loop: true,
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true,
+    },
+  });
+</script>
   </body>
 </html>
