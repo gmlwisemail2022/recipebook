@@ -57,12 +57,12 @@
                 Meals
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="#">All Meals</a></li>
-                <li><a class="dropdown-item" href="#">Appetizers</a></li>
-                <li><a class="dropdown-item" href="#">Entrees</a></li>
-                <li><a class="dropdown-item" href="#">Sides</a></li>
-                <li><a class="dropdown-item" href="#">Desserts</a></li>
-                <li><a class="dropdown-item" href="#">Drinks</a></li>
+                <li><a class="dropdown-item" href="#" onclick="filterByParam('List_All')">All Meals</a></li>
+                <li><a class="dropdown-item" href="#" onclick="filterByParam('appetizer')">Appetizers</a></li>
+                <li><a class="dropdown-item" href="#" onclick="filterByParam('entree')">Entrees</a></li>
+                <li><a class="dropdown-item" href="#" onclick="filterByParam('side')">Sides</a></li>
+                <li><a class="dropdown-item" href="#" onclick="filterByParam('dessert')">Desserts</a></li>
+                <li><a class="dropdown-item" href="#" onclick="filterByParam('drinks')">Drinks</a></li>
               </ul>
             </li>
             <li class="nav-item dropdown">
@@ -77,11 +77,11 @@
                 Cuisine
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="#">All Cuisines</a></li>
-                <li><a class="dropdown-item" href="#">Western</a></li>
-                <li><a class="dropdown-item" href="#">European</a></li>
-                <li><a class="dropdown-item" href="#">Mediterranean</a></li>
-                <li><a class="dropdown-item" href="#">Asian</a></li>
+                <li><a class="dropdown-item" href="#" onclick="filterByParam('List_All')">All Cuisines</a></li>
+                <li><a class="dropdown-item" href="#" onclick="filterByParam('Western')">Western</a></li>
+                <li><a class="dropdown-item" href="#" onclick="filterByParam('European')">European</a></li>
+                <li><a class="dropdown-item" href="#" onclick="filterByParam('Mediterranean')">Mediterranean</a></li>
+                <li><a class="dropdown-item" href="#" onclick="filterByParam('Asian')">Asian</a></li>
               </ul>
             </li>
           </ul>
@@ -149,6 +149,7 @@
                   <i class="fas fa-heart heart-icon {{#if this.isFavorite}}text-danger{{/if}}"></i>
               </button>
             </div>
+            
           </div>
         {{/each}}
       </div>
