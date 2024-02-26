@@ -23,13 +23,13 @@ heartButtons.forEach((button) => {
     toggleFavorite(userId, recipeId);
   });
 });
-
+/* no need helper
 //recipe default favorite icons:
 // Helper function to check if a recipe is in favorites
 Handlebars.registerHelper("isInFavorites", function (recipeId, favorites) {
   return favorites.includes(recipeId) ? "text-danger" : ""; // Change color to red if present in favorites
 });
-
+*/
 // -------------- event listeners for dashboard.hbs: ---------------------
 // Attach event listener to the form submission
 const form = document.getElementById("recipeForm");
