@@ -47,7 +47,7 @@ app.use(router);
 // ROUTES
 // Home
 app.get("/", (req, res) => {
-  res.render("home.hbs");
+  res.redirect("/recipe");
 });
 
 app.get("/auth/login", (req, res) => {
