@@ -107,3 +107,15 @@
 #ingredients {
   width: 80%;
 }
+
+/* for dashboard sliders */
+/* Custom CSS to adjust the position of Swiper navigation buttons */
+/* Custom CSS to adjust the gap between slider cards and pagination dots */
+.swiper-container {
+  margin-bottom: 0; /* Remove the bottom margin to eliminate the gap */
+}
+
+/* Optionally, adjust the position of pagination dots */
+.swiper-pagination {
+  bottom: 10px; /* Adjust the distance from the bottom */
+}
