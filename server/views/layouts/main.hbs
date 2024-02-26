@@ -9,18 +9,134 @@
       integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
       crossorigin="anonymous"
     />
+    <!-- Link to Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/5.4.0/css/bootstrap.min.css"
+    />
+    <!-- Link to Font Awesome CDN -->
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
+    />
+    {{!-- custom style sheet --}}
     <link rel="stylesheet" href="/css/styles.css" />
   </head>
   <body>
-    <nav>
-      <ul>
-        <li><a href="/auth/login">Login</a></li>
-        <li><a href="/auth/logout">Logout</a></li>
-        <li><a href="/register">Register</a></li>
-        <li><a href="/">Homepage</a></li>
-      </ul>
+  <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark" id="navbarEdit">
+      <div class="container-fluid">
+        <a class="navbar-brand pt-10" href="/"><img src="/images/logo.png" alt="" style="max-width: 150px;"></a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/auth/login">Login</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/register">Register</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Meals
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="#" onclick="filterByParam('List_All')">All Meals</a></li>
+                <li><a class="dropdown-item" href="#" onclick="filterByParam('appetizer')">Appetizers</a></li>
+                <li><a class="dropdown-item" href="#" onclick="filterByParam('entree')">Entrees</a></li>
+                <li><a class="dropdown-item" href="#" onclick="filterByParam('side')">Sides</a></li>
+                <li><a class="dropdown-item" href="#" onclick="filterByParam('dessert')">Desserts</a></li>
+                <li><a class="dropdown-item" href="#" onclick="filterByParam('drinks')">Drinks</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Cuisine
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="#" onclick="filterByParam('List_All')">All Cuisines</a></li>
+                <li><a class="dropdown-item" href="#" onclick="filterByParam('Western')">Western</a></li>
+                <li><a class="dropdown-item" href="#" onclick="filterByParam('European')">European</a></li>
+                <li><a class="dropdown-item" href="#" onclick="filterByParam('Mediterranean')">Mediterranean</a></li>
+                <li><a class="dropdown-item" href="#" onclick="filterByParam('Asian')">Asian</a></li>
+              </ul>
+            </li>
+          </ul>
+          <!-- Welcome message -->
+          {{#if isLoggedIn}}
+            <span class="navbar-text me-3">Welcome, {{user}}</span>
+          {{/if}}
+          <!-- Dashboard link -->
+          {{#if isLoggedIn}}
+            <a
+              class="btn btn-outline-success me-2"
+              href="#"
+              onclick="dashboardClick({{userId}})"
+            >Dashboard</a>
+          {{/if}}
+          <!-- Search bar -->
+          <form class="d-flex searchFunction" style="margin-top: 14px">
+            <input
+              id="search-input"
+              class="form-control me-2"
+              type="search"
+              placeholder="Search recipes..."
+              aria-label="Search"
+            />
+            <button
+              id="search-button"
+              class="btn btn-outline-success"
+              type="button"
+              onclick="searchRecipes()"
+            ><i class="fas fa-search"></i></button>
+          </form>
+        </div>
+      </div>
     </nav>
     {{{body}}}
+<footer class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col text-center">
+              <ul class="nav" id="footer-nav">
+                <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="/auth/login">Login</a></li>
+                <li class="nav-item"><a class="nav-link" href="/register">Register</a></li>
+              </ul>
+      </div>
+    </div>
+  </div>
+</footer>
+        
+
+    
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

@@ -1,9 +1,30 @@
-h1 {
-    /* test */
-    color: blue;
+#navbarEdit {
+    background-color: #04417e;
+    color: white;
+}
+h2 {
+    font-size: 36px; 
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+    font-family: "Arial", sans-serif; 
 }
 
-h2 {
-    /* test */
-    color: red;
+.footer {
+    margin-top: 150px;
+    padding-top: 50px;
+    background-color: #04417e;
+    color: white;
+    padding-bottom: 100px;
+}
+
+#footer-nav  li a {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    color: white;
+}
+
+#searchFunction {
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
