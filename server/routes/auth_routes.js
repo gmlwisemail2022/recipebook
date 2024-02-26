@@ -2,6 +2,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const authRouter = require('express').Router();
 const session = require('express-session');
+// const passport = require('../config/passport_setup.js');
 authRouter.use(session({
     secret: 'anything',
     resave: true,
