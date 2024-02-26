@@ -50,7 +50,7 @@ class UserController {
             const password = req.body.password;
             // calls the updatePassword method from the user service
             await userService.updatePassword(username, password);
-            res.status(200).json({message: "Successful Update: Password updated to " + password + " for " + username + " account."});
+            res.status(200).json({message: "Successful Update: Password updated for " + username + " account."});
         } catch (error) {
             res.status(500).json({error: error.message});
         }
