@@ -88,15 +88,32 @@ class RecipeService {
     }
   }
 
+  //list specific recipe by recipeId
+  async getRecipe(recipeId) {
+    console.log("looking for recipe data in db");
+    try {
+      const recipeData = await this.db("recipes")
+        .select("*")
+        .where({ recipe_id: recipeId });
+      console.log("recipe obtained: ", recipeData[0].recipe_id);
+      return recipeData;
+    } catch (error) {
+      // Handle the error appropriately
+      console.error(error);
+      throw error;
+    }
+  }
+
   //search recipe
   async search(keyword) {
     try {
-      const recipes = await this.db("recipes")
+      const recipeList = await this.db("recipes")
         .whereRaw(`LOWER(title) LIKE LOWER('%${keyword}%')`) // we convert both search string and database search
         .orWhereRaw(`LOWER(ingredients) LIKE LOWER('%${keyword}%')`) // into lower case to make it case-insensitive
         .orWhereRaw(`LOWER(instructions) LIKE LOWER('%${keyword}%')`)
         .select("*");
-      return recipes; // returns array of valid rows
+      console.log("returned recipe by search", recipeList);
+      return recipeList; // returns array of valid rows
     } catch (error) {
       throw new Error("Error searching for recipes: " + error.message);
     }
@@ -129,11 +146,22 @@ class RecipeService {
   }
 
   //edit recipe
-  async edit(recipeData, recipeId) {
+  async edit(recipeData, userId) {
+    console.log("editRecipe - service");
     try {
-      const { title, ingredients, servings, instructions, user_id } =
-        recipeData; //<< to pass user_id as well
-
+      const {
+        recipe_id,
+        title,
+        meal_type,
+        cuisine,
+        ingredients,
+        servings,
+        instructions,
+        user_id,
+      } = recipeData; //<< to pass user_id as well
+      console.log("update recipe with this data", recipeData);
+      console.log("update recipe with this recipeid", recipe_id);
+      console.log("update recipe with this userid", userId);
       const newRecipe = await this.db("recipes")
         .update({
           title,
@@ -145,8 +173,7 @@ class RecipeService {
           user_id,
           updated_at: new Date().toISOString(), // update only the update date (create date reamin unchanged)
         })
-        .where({ user_id: user_id })
-        .where({ recipe_id: recipeId })
+        .where({ recipe_id: recipe_id, user_id: userId })
         .returning("*");
       console.log("returned edited", newRecipe);
       return newRecipe[0];
@@ -251,7 +278,7 @@ class RecipeService {
     try {
       // Retrieve favorites of the user from the database
       const favorites = await this.db("favorites").where("user_id", userId);
-      console.log("favorites accessed from db", favorites);
+      console.log("favorites accessed from db", favorites.length);
       return favorites;
     } catch (error) {
       throw new Error(`Error fetching favorites: ${error.message}`);

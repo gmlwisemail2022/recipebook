@@ -43,7 +43,7 @@ router.get(
 );
 
 //search a recipe via url http://localhost:3000/recipe/:keyword
-router.post(
+router.get(
   "/recipe/search/:keyword",
   recipeController.search.bind(recipeController)
 );
@@ -59,16 +59,24 @@ router.get(
 router.post(
   "/dashboard/submit/:userId/",
   recipeController.add.bind(recipeController)
-); // add a new recipe
-// lets user edit added recipe via url http://localhost:3000/recipe/edit/:recipeId
-router.put(
-  "/recipe/edit/:recipeId",
-  recipeController.edit.bind(recipeController)
 );
+
+// lets user gets the recipe to be edited via url http://localhost:3000/recipe/edit/:recipeId
+router.get(
+  "/recipe/edit/:recipeId",
+  recipeController.getRecipeById.bind(recipeController)
+);
+
+// lets user update/edit the recipe via url http://localhost:3000/recipe/edit/save/:recipeId
+router.put(
+  "/recipe/edit/save/:userId",
+  recipeController.editRecipe.bind(recipeController)
+);
+
 // lets user delete added recipe via url http://localhost:3000/recipe/delete/:recipeId
 router.delete(
-  "/recipe/delete/:recipeId",
-  recipeController.delete.bind(recipeController)
+  "/dashboard/:userId/delete/:recipeId",
+  recipeController.deleteRecipe.bind(recipeController)
 );
 
 // all routes above are tested ok via postman (except for: http://localhost:3000/recipe/list/:userId)
@@ -77,11 +85,12 @@ router.post(
   "/favorites/:userId/:recipeId",
   recipeController.favorite.bind(recipeController)
 );
+/*
 // lets user unfavorite a recipe
 router.delete(
   "/favorites/:userId/:recipeId",
   recipeController.unfavorite.bind(recipeController)
 );
-
+*/
 // Export the router to be used in the app.js file
 module.exports = router;

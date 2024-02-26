@@ -16,12 +16,18 @@ heartButtons.forEach((button) => {
     userId = 3; // Temporary user id to bypass cookie
     if (!userId) {
       // If user ID is not found, redirect to the register page
-      window.location.href = "/register";
+      window.location.href = "/auth/login";
       return; // Stop further execution
     }
 
     toggleFavorite(userId, recipeId);
   });
+});
+
+//recipe default favorite icons:
+// Helper function to check if a recipe is in favorites
+Handlebars.registerHelper("isInFavorites", function (recipeId, favorites) {
+  return favorites.includes(recipeId) ? "text-danger" : ""; // Change color to red if present in favorites
 });
 
 // -------------- event listeners for dashboard.hbs: ---------------------
@@ -34,13 +40,107 @@ document.addEventListener("DOMContentLoaded", () => {
   const deleteButtons = document.querySelectorAll(".btn-delete");
   deleteButtons.forEach((button) => {
     button.addEventListener("click", () => {
-      const userId = getCookie("userId"); // Get the user ID from cookie
-      //const userId = 3; // Temporary user id
+      const userId = 3; // Hard-coded for now
       const recipeId = button.getAttribute("data-recipe-id");
-      deleteRecipe(userId, recipeId);
+
+      // Show the modal
+      const modal = document.getElementById("deleteModal");
+      const confirmButton = modal.querySelector(".btn-confirm-delete");
+
+      // Set up the confirmation button listener
+      confirmButton.addEventListener("click", async () => {
+        try {
+          // Call deleteRecipe if the user confirms
+          await deleteRecipe(userId, recipeId);
+        } catch (error) {
+          console.error("Error deleting recipe:", error);
+        } finally {
+          // Close the modal
+          const bootstrapModal = bootstrap.Modal.getInstance(modal);
+          bootstrapModal.hide();
+        }
+      });
+
+      // Show the modal when the delete button is clicked
+      const bootstrapModal = new bootstrap.Modal(modal);
+      bootstrapModal.show();
     });
   });
 });
+
+// Event listener for Edit buttons
+document.addEventListener("DOMContentLoaded", () => {
+  const editButtons = document.querySelectorAll(".btn-edit");
+  editButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const recipeId = button.getAttribute("data-recipe-id");
+
+      // Fetch the recipe data and populate the form fields
+      fetch(`/recipe/edit/${recipeId}`)
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data); // Log the response data
+          populateEditForm(data); // Function to populate form fields
+          $("#editModal").modal("show"); // Show the modal
+        })
+        .catch((error) => console.error("Error fetching recipe data:", error));
+    });
+  });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  // Event listener for Save Changes button in the edit modal
+  const editRecipeSubmitButton = document.getElementById("editRecipeSubmit");
+  const editRecipeForm = document.getElementById("editRecipeForm"); // Get the edit form element
+
+  editRecipeSubmitButton.addEventListener("click", async () => {
+    console.log("Save Changes button clicked");
+    event.preventDefault(); // Prevent default button behavior
+    const formData = new FormData(editRecipeForm);
+    const recipeData = {
+      recipe_id: formData.get("hidden_recipe_id"), // Include the recipe_id in the payload
+      title: formData.get("edit_title"),
+      meal_type: formData.get("edit_meal_type"),
+      cuisine: formData.get("edit_cuisine"),
+      servings: formData.get("edit_servings"),
+      ingredients: formData.get("edit_ingredients"),
+      instructions: formData.get("edit_instructions"),
+    };
+
+    // Send the updated recipe data to the server
+    try {
+      console.log("passong to server the RecipeData", recipeData);
+      userId = 3;
+      const response = await fetch(`/recipe/edit/save/${userId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(recipeData),
+      });
+      if (response.ok) {
+        console.log("Recipe updated successfully");
+        $("#editModal").modal("hide"); // Hide the modal
+        const data = await response.json();
+        console.log(
+          "edit form modal closed so redirect to dashboard/user with user in:",
+          data
+        );
+        const redirectUrl = data.redirect;
+        console.log("redirect url after edit", redirectUrl);
+        // Display alert message that the recipe has been updated
+        alert(data.message);
+        window.location.href = redirectUrl;
+      } else {
+        console.error("Failed to update recipe");
+      }
+    } catch (error) {
+      console.error("Error updating recipe:", error);
+    }
+  });
+});
+
+//==================================================
 
 // all the front-end recipe functions listed below:
 // function to filter the recipes by a specific cuisine
@@ -97,6 +197,30 @@ async function dashboardClick(userId) {
   }
 }
 
+async function searchRecipes() {
+  const keyword = document.getElementById("search-input").value.trim();
+  console.log("search for recipe via keyword ", keyword);
+
+  if (keyword !== "") {
+    try {
+      const response = await fetch(`/recipe/search/${keyword}`, {
+        method: "GET",
+      });
+
+      if (response.ok) {
+        // If the response is successful, redirect to the search results page
+        window.location.href = `/recipe/search/${keyword}`;
+      } else {
+        // Handle errors if any
+        console.error("Error searching recipes:", response.statusText);
+      }
+    } catch (error) {
+      // Handle any network errors
+      console.error("Network error:", error);
+    }
+  }
+}
+
 // Function to toggle favorite
 async function toggleFavorite(userId, recipeId) {
   console.log("checking favorite - user/ recipeId", userId, "/", recipeId);
@@ -109,9 +233,11 @@ async function toggleFavorite(userId, recipeId) {
       const icon = document.querySelector(
         `.heart-button[data-recipe-id="${recipeId}"] .heart-icon`
       );
-      icon.classList.toggle("fas", !icon.classList.contains("fas")); // Toggle red color
+      //icon.classList.toggle("fas", !icon.classList.contains("fas")); // Toggle red color
       //icon.classList.toggle("far");
-      // Optionally, change the color or style here
+
+      // Toggle the 'text-danger' class based on whether the recipe is a favorite
+      icon.classList.toggle("text-danger");
     } else {
       console.error("Failed to toggle favorite for recipe ID:", recipeId);
     }
@@ -148,7 +274,7 @@ async function removeFromFavorites(userId, recipeId) {
 
 // all front-end dashboard related functions below:
 
-// function to submit form (for add and edit)
+// function to submit form (for add)
 async function submitForm(event) {
   event.preventDefault(); // Prevent default form submission behavior
 
@@ -173,8 +299,8 @@ async function submitForm(event) {
 
   console.log("Form data:", recipeData);
 
-  const userId = getCookie("userId"); // Get the user ID from cookie
-  userId = 3; // Temporary user id to bypass cookie
+  //const userId = getCookie("userId"); // Get the user ID from cookie
+  const userId = 3; // Temporary user id to bypass cookie
   if (!userId) {
     // If user ID is not found, redirect to the register page
     window.location.href = "/register";
@@ -191,7 +317,12 @@ async function submitForm(event) {
     });
     if (response.ok) {
       console.log("Form submitted successfully");
-      // Optionally, handle success response
+      const data = await response.json();
+      const redirectUrl = data.redirect;
+      console.log("redirect url after edit", redirectUrl);
+      // Display alert message that the recipe has been updated
+      alert(data.message);
+      window.location.href = redirectUrl;
     } else {
       console.error("Failed to submit form");
       // Optionally, handle failed response
@@ -229,4 +360,16 @@ function getCookie(name) {
     }
   }
   return null;
+}
+
+// Function to populate the edit form fields with recipe data
+function populateEditForm(recipe) {
+  console.log("populate recipe form with", recipe);
+  document.getElementById("hidden_recipe_id").value = recipe[0].recipe_id;
+  document.getElementById("edit_title").value = recipe[0].title;
+  document.getElementById("edit_meal_type").value = recipe[0].meal_type;
+  document.getElementById("edit_cuisine").value = recipe[0].cuisine;
+  document.getElementById("edit_servings").value = recipe[0].servings;
+  document.getElementById("edit_ingredients").value = recipe[0].ingredients;
+  document.getElementById("edit_instructions").value = recipe[0].instructions;
 }

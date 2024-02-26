@@ -1,77 +1,133 @@
 <html lang="en">
   <head>
-    <!-- Head section remains the same -->
-    <link rel="stylesheet" href="/css/recipe.css" />
-    <!-- Link to Font Awesome CDN -->
-    <link
-      rel="stylesheet"
-      href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
-    />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recipes</title>
     <!-- Link to Bootstrap CSS -->
     <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/5.4.0/css/bootstrap.min.css"
     />
+    <!-- Link to Font Awesome CDN -->
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
+    />
+    <!-- Custom CSS -->
+    <style>
+      /* Custom styles */ body { font-family: Arial, sans-serif;
+      background-color: #f8f9fa; } .recipe-card { background-color: #fff;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); transition: box-shadow 0.3s
+      ease-in-out; } .recipe-card:hover { box-shadow: 0 6px 8px rgba(0, 0, 0,
+      0.2); } .heart-button { position: absolute; top: 10px; right: 10px;
+      z-index: 1; }
+    </style>
   </head>
   <body>
-    <header>
-      <!-- Header section remains the same -->
-      ...
-    </header>
-    <nav class="navigation-bar">
-      <div class="section-1">
-        <ul class="section-1-menu">
-          <li>Home</li>
-          <li class="dropdown">
-            <a href="javascript:void(0)" class="dropbtn">Meals</a>
-            <div class="dropdown-content">
-              <a href="#" onclick="filterByParam('List_All')">All Meals</a>
-              <a href="#" onclick="filterByParam('appetizer')">Appetizers</a>
-              <a href="#" onclick="filterByParam('entree')">Entrees</a>
-              <a href="#" onclick="filterByParam('side')">Sides</a>
-              <a href="#" onclick="filterByParam('dessert')">Desserts</a>
-              <a href="#" onclick="filterByParam('drinks')">Drinks</a>
-            </div>
-          </li>
-          <li class="dropdown">
-            <a href="javascript:void(0)" class="dropbtn">Cuisine</a>
-            <div class="dropdown-content">
-              <a href="#" onclick="filterByParam('List_All')">All Cuisines</a>
-              <a href="#" onclick="filterByParam('Western')">Western</a>
-              <a href="#" onclick="filterByParam('European')">European</a>
-              <a
-                href="#"
-                onclick="filterByParam('Mediterranean')"
-              >Mediterranean</a>
-              <a href="#" onclick="filterByParam('Asian')">Asian</a>
-            </div>
-          </li>
-        </ul>
-      </div>
-      <div class="section-2">
-        <ul class="section-2-menu">
-          {{#if isLoggedIn}}
-            <!-- may need to sync user_id variable -->
-            <a onclick="dashboardClick({{userId}})">Dashboard</a>
-            </li>
-            <li>Profile</li>
-            <li>Logout</li>
-          {{else}}
-            <!-- temp only to see changes while waiting for user auth -->
-            <a onclick="dashboardClick({{userId}})">Login</a>
 
-            <li>Signup</li>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Recipes</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Home</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Meals
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="#">All Meals</a></li>
+                <li><a class="dropdown-item" href="#">Appetizers</a></li>
+                <li><a class="dropdown-item" href="#">Entrees</a></li>
+                <li><a class="dropdown-item" href="#">Sides</a></li>
+                <li><a class="dropdown-item" href="#">Desserts</a></li>
+                <li><a class="dropdown-item" href="#">Drinks</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Cuisine
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="#">All Cuisines</a></li>
+                <li><a class="dropdown-item" href="#">Western</a></li>
+                <li><a class="dropdown-item" href="#">European</a></li>
+                <li><a class="dropdown-item" href="#">Mediterranean</a></li>
+                <li><a class="dropdown-item" href="#">Asian</a></li>
+              </ul>
+            </li>
+          </ul>
+          <!-- Welcome message -->
+          {{#if isLoggedIn}}
+            <span class="navbar-text me-3">Welcome, {{user}}</span>
           {{/if}}
-        </ul>
+          <!-- Dashboard link -->
+          {{#if isLoggedIn}}
+            <a
+              class="btn btn-outline-primary me-2"
+              href="#"
+              onclick="dashboardClick({{userId}})"
+            >Dashboard</a>
+          {{/if}}
+          <!-- Search bar -->
+          <form class="d-flex">
+            <input
+              id="search-input"
+              class="form-control me-2"
+              type="search"
+              placeholder="Search recipes..."
+              aria-label="Search"
+            />
+            <button
+              id="search-button"
+              class="btn btn-outline-success"
+              type="button"
+              onclick="searchRecipes()"
+            ><i class="fas fa-search"></i></button>
+          </form>
+        </div>
       </div>
     </nav>
-    {{{body}}}
-    <section>
-      <h1>Recipes</h1>
+
+    <!-- Recipe Cards -->
+    <div class="container mt-4">
       <div class="row">
         {{#each recipes}}
-           <div class="col-sm-4">
-            <div class="slender-card">
+          <div class="col-md-4 mb-4">
+            <div class="card recipe-card">
+              <img
+                src="https://via.placeholder.com/300"
+                class="card-img-top"
+                alt="Recipe Image"
+              />
               <div class="card-body" onclick="recipeClick({{this.recipe_id}})">
                 <h5 class="card-title">Recipe Name:</h5>
                 <p class="card-text">{{this.title}}</p>
@@ -85,22 +141,26 @@
                 <p class="card-text">{{this.user_id}}</p>
               </div>
               <button
-                type="button"
-                class="btn btn-outline-secondary heart-button"
-                data-recipe-id="{{this.recipe_id}}"
+                  type="button"
+                  class="btn btn-outline-secondary heart-button"
+                  data-recipe-id="{{this.recipe_id}}"
                   data-user-id="{{userId}}"
               >
-                <i class="far fa-heart heart-icon"></i>
+                  <i class="fas fa-heart heart-icon {{#if this.isFavorite}}text-danger{{/if}}"></i>
               </button>
             </div>
-          </div> 
+          </div>
         {{/each}}
       </div>
-    </section>
-    <script src="/js/recipeClient.js"></script>
+    </div>
+
+    <!-- Bootstrap JS bundle -->
     <script
       src="https://stackpath.bootstrapcdn.com/bootstrap/5.4.0/js/bootstrap.bundle.min.js"
     ></script>
+    <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Your custom script -->
+    <script src="/js/recipeClient.js"></script>
   </body>
 </html>

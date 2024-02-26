@@ -3,6 +3,13 @@ const db = require("../db/db");
 const RecipeService = require("../service/recipe");
 const recipeService = new RecipeService(db);
 const app = require("../config/app");
+/*added handlebar helper
+const Handlebars = require("handlebars");
+let favorites = [];
+Handlebars.registerHelper("isInFavorites", function (recipeId, favorites) {
+  return favorites.includes(recipeId) ? "text-danger" : "";
+});
+*/
 
 class RecipeController {
   async listAll(req, res) {
@@ -32,18 +39,15 @@ class RecipeController {
         case isCuisine(param):
           recipeList = await recipeService.listCuisine(param);
           break;
+        case Number.isInteger(Number(param)):
+          recipeList = await recipeService.listRecipe(Number(param));
+          break;
         default:
           return res.status(400).json({ error: "Invalid parameter" });
       }
 
-      // Fetch the user's favorites if userId is available
-      let favorites = [];
-      if (userId) {
-        favorites = await recipeService.getFavorites(userId);
-      }
-
       // If user is authenticated, load their favorites
-
+      /*
       // Map through recipeList to check if each recipe is favorited by the authenticated user
       recipeList = recipeList.map((recipe) => {
         // Check if the recipe ID exists in the favorites of the authenticated user
@@ -53,13 +57,37 @@ class RecipeController {
         // Add a new property to each recipe indicating whether it's favorited by the user
         return { ...recipe, isFavorited };
       });
+*/
+
+      // Fetch the user's favorites if userId is available
+      let favorites = [];
+
+      if (userId) {
+        console.log("list all user id present:", userId);
+        favorites = await recipeService.getFavorites(userId);
+      }
+      // try to attach favorites checking for each recipeList extracted from the table
+      recipeList.forEach((recipe) => {
+        // Check if the recipe's recipe_id exists in favorites
+        const isFavorite = favorites.some(
+          (favorite) => favorite.recipe_id === recipe.recipe_id
+        );
+        // Add isFavorite property to the recipe object
+        recipe.isFavorite = isFavorite;
+      });
+
+      console.log("favorites present:", favorites.length);
 
       if (recipeList.length === 0) {
         const message = `No recipe to show for ${param}`;
         res.render("empty-recipe", { message });
       } else {
         console.log("new recipe total from filter", recipeList.length);
-        res.render("recipe", { recipes: recipeList });
+        res.render("recipe", {
+          recipes: recipeList,
+          favorites: favorites,
+          isLoggedIn: true,
+        });
       }
     } catch (error) {
       res.status(500).json({ error: error.message });
@@ -85,9 +113,21 @@ class RecipeController {
     }
   }
 
-  // list the details user added recipe
+  // get the specific recipe by id for the user to edit
+  async getRecipeById(req, res) {
+    const { recipeId } = req.params;
+    try {
+      const recipeData = await recipeService.getRecipe(recipeId);
+      res.json(recipeData);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
 
+  // list the details user added recipe
   async listUserRecipe(req, res) {
+    console.log("listUserRecipes params", req.params);
+    console.log("listUserRecipes bodys", req.body);
     const { userId } = req.params;
     console.log(
       "processing list user recipes - controller - user Id is ",
@@ -103,10 +143,20 @@ class RecipeController {
 
   async search(req, res) {
     try {
-      const { keyword } = req.params;
+      const encodedKeyword = req.params.keyword;
+      const keyword = decodeURIComponent(encodedKeyword);
       const recipeList = await recipeService.search(keyword);
-      res.json(recipeList);
+      console.log("recipeList", recipeList.length);
+      if (recipeList.length === 0) {
+        console.log("no recipe list!");
+        const message = `No recipe to show for your search keyword: ${keyword}`;
+        res.render("empty-recipe", { message });
+      } else {
+        console.log("new recipe total from filter", recipeList.length);
+        res.render("recipe", { recipes: recipeList });
+      }
     } catch (error) {
+      console.log("no recipe found for keyword:", req.params.keyword);
       res.status(500).json({ error: error.message });
     }
   }
@@ -120,28 +170,30 @@ class RecipeController {
     const { userId } = req.params;
     console.log("recipeData", recipeData.length, "userId", userId);
     try {
-      const newRecipe = await recipeService.add(recipeData, userId);
-      res.status(201).json(newRecipe);
+      await recipeService.add(recipeData, userId);
+      const message = `Recipe ${recipeData.title} Added!`;
+      res.status(201).json({ message, redirect: `/dashboard/${userId}` });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
   }
 
-  async edit(req, res) {
-    // note need to add logic to redirect to user login if user currently not logged in (user_id = null). Else, proceed with add recipe request
-    //option 2: no need to create check here, simply the user can't see the add feature if not logged in
-    //console.log("add params", req.params);
+  async editRecipe(req, res) {
+    console.log("editRecipe - controller");
     try {
+      const { userId } = req.params;
       const recipeData = req.body;
-      const { recipeId } = req.params;
-      await recipeService.edit(recipeData, recipeId);
-      res.status(201).json("Recipe updated!");
+      console.log("edit Recipe - controller body:", recipeData);
+      await recipeService.edit(recipeData, userId);
+      const message = `Recipe ${recipeData.title} Edited!`;
+      console.log("return this message for successful edit recipe", message);
+      res.status(201).json({ message, redirect: `/dashboard/${userId}` });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
   }
 
-  async delete(req, res) {
+  async deleteRecipe(req, res) {
     // note need to add logic to redirect to user login if user currently not logged in (user_id = null). Else, proceed with add recipe request
     //option 2: no need to create check here, simply the user can't see the add feature if not logged in
     //console.log("add params", req.params);
@@ -199,7 +251,7 @@ class RecipeController {
 
 //function to check if the parameter is a valid meal type
 function isMealType(param) {
-  console.log("checking cuisine where param is", param);
+  console.log("checking meal type where param is", param);
   const validMealTypes = ["appetizer", "entree", "side", "dessert", "drinks"];
   return validMealTypes.includes(param);
 }
