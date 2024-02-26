@@ -252,7 +252,7 @@ class RecipeController {
 //function to check if the parameter is a valid meal type
 function isMealType(param) {
   console.log("checking meal type where param is", param);
-  const validMealTypes = ["appetizer", "entree", "side", "dessert", "drinks"];
+  const validMealTypes = ["appetizer", "entree", "sides", "dessert", "drinks"];
   return validMealTypes.includes(param);
 }
 //function to check if the parameter is a valid cuisine

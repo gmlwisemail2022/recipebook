@@ -19,14 +19,18 @@
       rel="stylesheet"
       href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
     />
-    {{!-- custom style sheet --}}
+    {{! custom style sheet }}
     <link rel="stylesheet" href="/css/styles.css" />
   </head>
   <body>
-  <!-- Navbar -->
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark" id="navbarEdit">
       <div class="container-fluid">
-        <a class="navbar-brand pt-10" href="/"><img src="/images/logo.png" alt="" style="max-width: 150px;"></a>
+        <a class="navbar-brand pt-10" href="/"><img
+            src="/images/logo.png"
+            alt=""
+            style="max-width: 150px;"
+          /></a>
         <button
           class="navbar-toggler"
           type="button"
@@ -44,10 +48,18 @@
               <a class="nav-link active" aria-current="page" href="/">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="/auth/login">Login</a>
+              <a
+                class="nav-link active"
+                aria-current="page"
+                href="/auth/login"
+              >Login</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="/register">Register</a>
+              <a
+                class="nav-link active"
+                aria-current="page"
+                href="/register"
+              >Register</a>
             </li>
             <li class="nav-item dropdown">
               <a
@@ -61,12 +73,36 @@
                 Meals
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="#" onclick="filterByParam('List_All')">All Meals</a></li>
-                <li><a class="dropdown-item" href="#" onclick="filterByParam('appetizer')">Appetizers</a></li>
-                <li><a class="dropdown-item" href="#" onclick="filterByParam('entree')">Entrees</a></li>
-                <li><a class="dropdown-item" href="#" onclick="filterByParam('side')">Sides</a></li>
-                <li><a class="dropdown-item" href="#" onclick="filterByParam('dessert')">Desserts</a></li>
-                <li><a class="dropdown-item" href="#" onclick="filterByParam('drinks')">Drinks</a></li>
+                <li><a
+                    class="dropdown-item"
+                    href="#"
+                    onclick="filterByParam('List_All')"
+                  >All Meals</a></li>
+                <li><a
+                    class="dropdown-item"
+                    href="#"
+                    onclick="filterByParam('appetizer')"
+                  >Appetizers</a></li>
+                <li><a
+                    class="dropdown-item"
+                    href="#"
+                    onclick="filterByParam('entree')"
+                  >Entrees</a></li>
+                <li><a
+                    class="dropdown-item"
+                    href="#"
+                    onclick="filterByParam('sides')"
+                  >Sides</a></li>
+                <li><a
+                    class="dropdown-item"
+                    href="#"
+                    onclick="filterByParam('dessert')"
+                  >Desserts</a></li>
+                <li><a
+                    class="dropdown-item"
+                    href="#"
+                    onclick="filterByParam('drinks')"
+                  >Drinks</a></li>
               </ul>
             </li>
             <li class="nav-item dropdown">
@@ -81,11 +117,36 @@
                 Cuisine
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="#" onclick="filterByParam('List_All')">All Cuisines</a></li>
-                <li><a class="dropdown-item" href="#" onclick="filterByParam('Western')">Western</a></li>
-                <li><a class="dropdown-item" href="#" onclick="filterByParam('European')">European</a></li>
-                <li><a class="dropdown-item" href="#" onclick="filterByParam('Mediterranean')">Mediterranean</a></li>
-                <li><a class="dropdown-item" href="#" onclick="filterByParam('Asian')">Asian</a></li>
+                <li><a
+                    class="dropdown-item"
+                    href="#"
+                    onclick="filterByParam('List_All')"
+                  >All Cuisines</a></li>
+                <li><a
+                    class="dropdown-item"
+                    href="#"
+                    onclick="filterByParam('Western')"
+                  >Western</a></li>
+                <li><a
+                    class="dropdown-item"
+                    href="#"
+                    onclick="filterByParam('European')"
+                  >European</a></li>
+                <li><a
+                    class="dropdown-item"
+                    href="#"
+                    onclick="filterByParam('Mediterranean')"
+                  >Mediterranean</a></li>
+                <li><a
+                    class="dropdown-item"
+                    href="#"
+                    onclick="filterByParam('Asian')"
+                  >Asian</a></li>
+                <li><a
+                    class="dropdown-item"
+                    href="#"
+                    onclick="filterByParam('African')"
+                  >African</a></li>
               </ul>
             </li>
           </ul>
@@ -121,22 +182,26 @@
       </div>
     </nav>
     {{{body}}}
-<footer class="footer">
-  <div class="container">
-    <div class="row">
-      <div class="col text-center">
-              <ul class="nav" id="footer-nav">
-                <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="/auth/login">Login</a></li>
-                <li class="nav-item"><a class="nav-link" href="/register">Register</a></li>
-              </ul>
+    <footer class="footer">
+      <div class="container">
+        <div class="row">
+          <div class="col text-center">
+            <ul class="nav" id="footer-nav">
+              <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+              <li class="nav-item"><a
+                  class="nav-link"
+                  href="/auth/login"
+                >Login</a></li>
+              <li class="nav-item"><a
+                  class="nav-link"
+                  href="/register"
+                >Register</a></li>
+            </ul>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</footer>
-        
+    </footer>
 
-    
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
