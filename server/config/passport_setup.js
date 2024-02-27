@@ -43,26 +43,26 @@ passport.deserializeUser(async (id, done) => {
 });
 
 
-// passport.use( 'local-login', new LocalStrategy.Strategy({
-//     usernameField: 'email',
-//     passwordField: 'password',
-//     passReqToCallback: false
-// },
-//     async (email, password, done) => {
-//         try {
-//             const user = await userController.getUserByEmail('email', email);
-//             if (!user) {
-//                 return done(null, false, { message: "Incorrect email." });
-//             }
-//             if (!bcrypt.compare(password, user.password)) {
-//                 return done(null, false, { message: "Incorrect password." });
-//             }
-//             return done(null, user);
-//         } catch (error) {
-//             done(error);
-//         }
-//     }
-// ));
+passport.use( 'local-login', new LocalStrategy.Strategy({
+    usernameField: 'email',
+    passwordField: 'password',
+    passReqToCallback: false
+},
+    async (email, password, done) => {
+        try {
+            const user = await userController.getUserByEmail('email', email);
+            if (!user) {
+                return done(null, false, { message: "Incorrect email." });
+            }
+            if (!bcrypt.compare(password, user.password)) {
+                return done(null, false, { message: "Incorrect password." });
+            }
+            return done(null, user);
+        } catch (error) {
+            done(error);
+        }
+    }
+));
 
 passport.use(
     "local-login",
