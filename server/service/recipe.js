@@ -75,7 +75,7 @@ class RecipeService {
     console.log("looking for user added recipe in db");
     try {
       //temp override
-      userId = 3;
+      userId = 3; //hardcoded
       const recipeList = await this.db("recipes")
         .select("*")
         .where({ user_id: userId });
