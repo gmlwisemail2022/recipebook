@@ -13,7 +13,7 @@ heartButtons.forEach((button) => {
     var userId = getCookie("userId"); // Get the user ID from cookie
     console.log("recipeId", recipeId);
     // check if a user is logged in
-    userId = 3; // Temporary user id to bypass cookie
+    userId = 3; // Temporary user id to bypass cookie //hardcoded //hardcoded
     if (!userId) {
       // If user ID is not found, redirect to the register page
       window.location.href = "/auth/login";
@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const deleteButtons = document.querySelectorAll(".btn-delete");
   deleteButtons.forEach((button) => {
     button.addEventListener("click", () => {
-      const userId = 3; // Hard-coded for now
+      const userId = 3; //hardcoded
       const recipeId = button.getAttribute("data-recipe-id");
 
       // Show the modal
@@ -104,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Send the updated recipe data to the server
     try {
       console.log("passong to server the RecipeData", recipeData);
-      userId = 3;
+      userId = 3; //hardcoded
       const response = await fetch(`/recipe/edit/save/${userId}`, {
         method: "PUT",
         headers: {
@@ -177,7 +177,7 @@ async function recipeClick(recipeId) {
 
 async function dashboardClick(userId) {
   console.log("dashboard clicked for userid", userId); // Log the original userId first
-  userId = 3; // Temporarily set userId to 3
+  userId = 3; // Temporarily set userId to 3 //hardcoded
   try {
     await fetch(`/dashboard/${userId}`, {
       method: "GET",
@@ -242,7 +242,7 @@ async function toggleFavorite(userId, recipeId) {
 
 // Function to add to favorites
 async function addToFavorites(userId, recipeId) {
-  userId = 3; // temp override user id
+  userId = 3; // temp override user id //hardcoded
   try {
     await fetch(`/favorites/${userId}/${recipeId}`, {
       method: "POST",
@@ -255,7 +255,7 @@ async function addToFavorites(userId, recipeId) {
 
 // Function to remove favorites
 async function removeFromFavorites(userId, recipeId) {
-  userId = 3; // temp override user id
+  userId = 3; // temp override user id //hardcoded
   try {
     await fetch(`/favorites/${userId}/${recipeId}`, {
       method: "DELETE",
@@ -294,7 +294,7 @@ async function submitForm(event) {
   console.log("Form data:", recipeData);
 
   //const userId = getCookie("userId"); // Get the user ID from cookie
-  const userId = 3; // Temporary user id to bypass cookie
+  const userId = 3; // Temporary user id to bypass cookie //hardcoded
   if (!userId) {
     // If user ID is not found, redirect to the register page
     window.location.href = "/register";
@@ -329,7 +329,7 @@ async function submitForm(event) {
 
 // function to delete the recipe
 async function deleteRecipe(userId, recipeId) {
-  //const userId = 3; // Temporary user id
+  //const userId = 3; // Temporary user id //hardcoded
   try {
     const response = await fetch(`/dashboard/${userId}/delete/${recipeId}`, {
       method: "DELETE",

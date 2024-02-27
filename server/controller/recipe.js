@@ -3,13 +3,6 @@ const db = require("../db/db");
 const RecipeService = require("../service/recipe");
 const recipeService = new RecipeService(db);
 const app = require("../config/app");
-/*added handlebar helper
-const Handlebars = require("handlebars");
-let favorites = [];
-Handlebars.registerHelper("isInFavorites", function (recipeId, favorites) {
-  return favorites.includes(recipeId) ? "text-danger" : "";
-});
-*/
 
 class RecipeController {
   async listAll(req, res) {
@@ -24,9 +17,8 @@ class RecipeController {
       userId = req.user.id; // Get user ID if authenticated
     }
     // temp may be  const userId = req.cookies.userId; if the code above does not work
-
 */
-    const userId = 3;
+    const userId = 3; //hardcoded
     try {
       // Check the param and fetch recipes accordingly
       switch (true) {
@@ -45,19 +37,6 @@ class RecipeController {
         default:
           return res.status(400).json({ error: "Invalid parameter" });
       }
-
-      // If user is authenticated, load their favorites
-      /*
-      // Map through recipeList to check if each recipe is favorited by the authenticated user
-      recipeList = recipeList.map((recipe) => {
-        // Check if the recipe ID exists in the favorites of the authenticated user
-        const isFavorited = favorites.some(
-          (favorite) => favorite.recipe_id === recipe.recipe_id
-        );
-        // Add a new property to each recipe indicating whether it's favorited by the user
-        return { ...recipe, isFavorited };
-      });
-*/
 
       // Fetch the user's favorites if userId is available
       let favorites = [];
@@ -163,9 +142,6 @@ class RecipeController {
 
   async add(req, res) {
     console.log("add recipe - controller");
-    // note need to add logic to redirect to user login if user currently not logged in (user_id = null). Else, proceed with add recipe request
-    //option 2: no need to create check here, simply the user can't see the add feature if not logged in
-    //console.log("add params", req.params);
     const recipeData = req.body;
     const { userId } = req.params;
     console.log("recipeData", recipeData.length, "userId", userId);
@@ -194,9 +170,6 @@ class RecipeController {
   }
 
   async deleteRecipe(req, res) {
-    // note need to add logic to redirect to user login if user currently not logged in (user_id = null). Else, proceed with add recipe request
-    //option 2: no need to create check here, simply the user can't see the add feature if not logged in
-    //console.log("add params", req.params);
     try {
       const { userId, recipeId } = req.params;
       await recipeService.delete(recipeId);
@@ -231,17 +204,6 @@ class RecipeController {
       res.status(500).json({ error: error.message });
     }
   }
-  /*
-  async unfavorite(req, res) {
-    try {
-      const { userId, recipeId } = req.params;
-      await recipeService.unfavorite(userId, recipeId);
-      res.status(201).json("favorite removed!");
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  }
-  */
 }
 
 // server side functions listed here:
