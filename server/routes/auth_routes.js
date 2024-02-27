@@ -1,8 +1,10 @@
 const passport = require('passport');
+const bcrypt = require('bcrypt');
 const LocalStrategy = require('passport-local').Strategy;
+const GoogleStrategy = require('passport-google-oauth2').Strategy;
 const authRouter = require('express').Router();
 const session = require('express-session');
-const e = require('express');
+// const e = require('express');
 // const passport = require('../config/passport_setup.js');
 authRouter.use(session({
     secret: 'anything',
@@ -13,33 +15,7 @@ const db = ('../db/db.js');
 authRouter.use(passport.initialize());
 authRouter.use(passport.session());
 
-// passport.use(
-//     'local', // 'local' is the name of the strategy
-//     new LocalStrategy((email, password, done) => {
-//         console.log('LocalStrategy');
-//         db('users')
-//             .where({ email })
-//             .first()
-//             .then(user => {
-//                 console.log('User found');
-//                 if (!user) {
-//                     console.log('Incorrect email');
-//                     return done(null, false, { message: 'Incorrect email.' });
-//                 }
-//                 if (password !== user.password) {
-//                     console.log('Incorrect password');
-//                     return done(null, false, { message: 'Incorrect password.' });
-//                 }
-//                 console.log('Authentication successful');
-//                 return done(null, user);
-//             })
-//             .catch(err => {
-//                 console.log('Error:', err);
-//                 done(err);
-//             });
-//     })
-// );
-
+// local strategy
 passport.use( 'local-login', new LocalStrategy.Strategy({
     usernameField: 'email',
     passwordField: 'password',
@@ -62,6 +38,24 @@ passport.use( 'local-login', new LocalStrategy.Strategy({
         // }
     }
 ));
+
+// google strategy
+passport.use(
+    "google", new GoogleStrategy({
+        // options for the GoogleStrategy
+        clientID: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        callbackURL: 'https://localhost:3000/auth/google/callback',
+        // passReqToCallback: true
+    },
+        async (accessToken, refreshToken, profile, done) => {
+            const user = await knex('users').where({ googleId: profile.id });
+            if (profile) {
+                return done(null, user);
+            }
+            return done(null, profile);
+        })
+);
 
 passport.serializeUser((user, done) => {
     console.log('serializeUser');
