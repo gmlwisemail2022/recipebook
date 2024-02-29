@@ -4,6 +4,7 @@ const LocalStrategy = require('passport-local').Strategy;
 const GoogleStrategy = require('passport-google-oauth2').Strategy;
 const authRouter = require('express').Router();
 const session = require('express-session');
+const knex = require('knex');
 // const e = require('express');
 // const passport = require('../config/passport_setup.js');
 authRouter.use(session({
@@ -12,6 +13,11 @@ authRouter.use(session({
     saveUninitialized: true
 }));
 const db = ('../db/db.js');
+
+function comparePass(userPassword, databasePassword) {
+    return bcrypt.compareSync(userPassword, databasePassword);
+}
+
 authRouter.use(passport.initialize());
 authRouter.use(passport.session());
 
@@ -23,19 +29,21 @@ passport.use( 'local-login', new LocalStrategy.Strategy({
 },
      (req, email, password, done) => {
         console.log('LocalStrategy');
-        done(null);
-        // try {
-        //     const user = userController.getUserByEmail('email', email);
-        //     if (!user) {
-        //         return done(null, false, { message: "Incorrect email." });
-        //     }
-        //     if (!bcrypt.compare(password, user.password)) {
-        //         return done(null, false, { message: "Incorrect password." });
-        //     }
-        //     return done(null, user);
-        // } catch (error) {
-        //     done(error);
-        // }
+        db('users').where({ email }).first()
+        .then(user => {
+            if (!user) {
+                return done(null, false, { message: 'Incorrect email' });
+            }
+            if (!authHelpers.comparePass(password, user.password)) {
+                return done(null, false, { message: 'Incorrect password' });
+            }
+            else {
+                return done(null, user);
+            }
+        })
+        .catch(err => {
+            return done(err);
+        });
     }
 ));
 
@@ -96,6 +104,14 @@ authRouter.post('/login', function(req, res, next) {
             return res.status(401).json(info.message);
         }
         res.json(user);
+    })(req, res, next);
+});
+
+authRouter.get('/google/callback', function(req, res, next) {
+    passport.authenticate('google', {
+        if (err) {
+            return res.status(500).json(err);
+        }
     })(req, res, next);
 });
 
