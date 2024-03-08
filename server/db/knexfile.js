@@ -5,14 +5,14 @@
  */
 
 const dotenv = require("dotenv");
-dotenv.config({ path: "../.env"});
+dotenv.config({ path: "../.env" });
 
 module.exports = {
   development: {
     client: "postgresql",
     connection: {
       database: process.env.DATABASE,
-      user: process.env.USERNAME,
+      user: "postgres",
       password: process.env.PASSWORD,
     },
     pool: {

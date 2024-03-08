@@ -3,10 +3,9 @@
 // -= All event listeners =-
 
 // ------------- event listeners for recipe.hbs: -----------------------
-// Favorites (Heart button)
+// Event listener for each favorites (heart) button
 const heartButtons = document.querySelectorAll(".heart-button"); // Get all heart buttons
 
-// Attach event listener to each heart button
 heartButtons.forEach((button) => {
   button.addEventListener("click", function () {
     const recipeId = this.getAttribute("data-recipe-id");
@@ -25,7 +24,7 @@ heartButtons.forEach((button) => {
 });
 
 // -------------- event listeners for dashboard.hbs: ---------------------
-// Attach event listener to the form submission
+// Attach event listener to the form submission to add new recipe
 const form = document.getElementById("recipeForm");
 form.addEventListener("submit", submitForm);
 
@@ -37,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const userId = 3; //hardcoded
       const recipeId = button.getAttribute("data-recipe-id");
 
-      // Show the modal
+      // Show the modal to confirm recipe deletion
       const modal = document.getElementById("deleteModal");
       const confirmButton = modal.querySelector(".btn-confirm-delete");
 
@@ -62,7 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// Event listener for Edit buttons
+// Event listener for Edit recipe button
 document.addEventListener("DOMContentLoaded", () => {
   const editButtons = document.querySelectorAll(".btn-edit");
   editButtons.forEach((button) => {
@@ -82,8 +81,8 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+// Event listener for Save Changes button in the edit modal
 document.addEventListener("DOMContentLoaded", () => {
-  // Event listener for Save Changes button in the edit modal
   const editRecipeSubmitButton = document.getElementById("editRecipeSubmit");
   const editRecipeForm = document.getElementById("editRecipeForm"); // Get the edit form element
 
@@ -135,7 +134,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 //==================================================
-
 // all the front-end recipe functions listed below:
 // function to filter the recipes by a specific cuisine
 async function filterByParam(param) {
@@ -146,10 +144,8 @@ async function filterByParam(param) {
       url: `/recipe/${param}`,
       type: "GET",
     });
-    //console.log(data);
     // Redirect to the recipe page
     window.location.href = `/recipe/${param}`;
-    // Example: displayRecipes(data);
   } catch (error) {
     // Handle any errors that occurred during the AJAX request.
     console.log("request error url:", `/recipe/${param}`);
@@ -157,6 +153,7 @@ async function filterByParam(param) {
   }
 }
 
+// function to show the recipe details when a recipe is clicked (recipe.hbs >>> recipe-detail.hbs)
 async function recipeClick(recipeId) {
   console.log("recipe clicked for recipe", recipeId);
   try {
@@ -167,14 +164,13 @@ async function recipeClick(recipeId) {
     });
     // Direct to the recipe Detail page
     window.location.href = `/recipe/details/${recipeId}`;
-    //isplayRecipeDetails(data); // Pass the data to the display function
-    // Example: displayRecipes(data);
   } catch (error) {
     console.log("request error url:", `/recipe/details/${recipeId}`);
     console.error(error);
   }
 }
 
+// function to show the user dashboard when dashboard is clicked (recipe.hbs >>> dashboard.hbs)
 async function dashboardClick(userId) {
   console.log("dashboard clicked for userid", userId); // Log the original userId first
   userId = 3; // Temporarily set userId to 3 //hardcoded
@@ -191,6 +187,7 @@ async function dashboardClick(userId) {
   }
 }
 
+// function to show the filter the recipes when search recipe is clicked
 async function searchRecipes() {
   const keyword = document.getElementById("search-input").value.trim();
   console.log("search for recipe via keyword ", keyword);
@@ -215,7 +212,7 @@ async function searchRecipes() {
   }
 }
 
-// Function to toggle favorite
+// Function to toggle favorites when favorite button is clicked (called by the event listerner setup above)
 async function toggleFavorite(userId, recipeId) {
   console.log("checking favorite - user/ recipeId", userId, "/", recipeId);
   try {
@@ -227,8 +224,6 @@ async function toggleFavorite(userId, recipeId) {
       const icon = document.querySelector(
         `.heart-button[data-recipe-id="${recipeId}"] .heart-icon`
       );
-      //icon.classList.toggle("fas", !icon.classList.contains("fas")); // Toggle red color
-      //icon.classList.toggle("far");
 
       // Toggle the 'text-danger' class based on whether the recipe is a favorite
       icon.classList.toggle("text-danger");
